@@ -642,10 +642,30 @@ vigil/
   docs/
     OSS_HYGIENE.md
     QUICKSTART.md
+  dashboard/                 ← Vigil web dashboard (Next.js 16, Tailwind, shadcn)
+    src/app/(dashboard)/     ← 17 pages: chat, timeline, watchlist, mttd, mttr, war,
+                                  logs, accounts, services, finops, slo, incidents,
+                                  security, iam, deployments, oncall, settings
+    src/components/          ← sidebar, command-bar, AI-assistant-panel, ui/...
+    src/messages/{en,ko}.json ← i18n via next-intl
+    package.json
   README.md
   pyproject.toml
   LICENSE
 ```
+
+### Running the dashboard locally
+
+```
+cd dashboard
+npm install
+npm run dev        # http://localhost:3000
+```
+
+The dashboard ships with English (`en`) as the default locale. Switch to Korean
+in the language picker (top right) — translations live in `src/messages/ko.json`.
+The default landing route is `/logs`; the setup wizard is pre-bypassed for OSS
+users (configure your real cloud accounts under `/accounts` instead).
 
 ---
 

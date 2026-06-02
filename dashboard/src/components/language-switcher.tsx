@@ -1,0 +1,68 @@
+"use client"
+
+import * as React from "react"
+import { useRouter } from "next/navigation"
+import { useLocale } from "next-intl"
+import { Globe } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+const locales = [
+  { code: "en", label: "EN", name: "English" },
+  { code: "ko", label: "KO", name: "한국어" },
+] as const
+
+export function LanguageSwitcher() {
+  const locale = useLocale()
+  const router = useRouter()
+  const [pendingLocale, setPendingLocale] = React.useState<string | null>(null)
+
+  const currentLocale = locales.find((l) => l.code === locale) ?? locales[0]
+
+  React.useEffect(() => {
+    if (pendingLocale) {
+      document.cookie = `vigil-locale=${pendingLocale};path=/;max-age=${60 * 60 * 24 * 365};samesite=lax`
+      router.refresh()
+      setPendingLocale(null)
+    }
+  }, [pendingLocale, router])
+
+  function switchLocale(newLocale: string) {
+    setPendingLocale(newLocale)
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        render={
+          <Button
+            variant="ghost"
+            size="default"
+            className="gap-1.5 text-muted-foreground hover:text-foreground"
+          >
+            <Globe className="size-[18px] shrink-0" />
+            <span className="text-sm font-medium">{currentLocale.label}</span>
+          </Button>
+        }
+      />
+      <DropdownMenuContent side="bottom" align="end">
+        {locales.map((l) => (
+          <DropdownMenuItem
+            key={l.code}
+            className={cn(locale === l.code && "bg-muted")}
+            onSelect={() => switchLocale(l.code)}
+          >
+            <span className="font-mono text-xs font-medium">{l.label}</span>
+            <span className="ml-2 text-xs text-muted-foreground">{l.name}</span>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
