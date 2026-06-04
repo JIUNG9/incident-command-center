@@ -10,9 +10,14 @@ import {
   CheckCircle2,
   XCircle,
   Loader2,
+  ThumbsUp,
+  ThumbsDown,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { type ChatMessage, type ToolCall, type ToolCallStatus } from "@/lib/mock-data/ai-chat"
+import { type ParoChatMessage, useAIStore } from "@/lib/stores/ai-store"
+import { ConfidenceBadge } from "@/components/acme-deploy/confidence-badge"
+import { SourceList } from "@/components/acme-deploy/source-list"
 
 // ---- Relative time helper ----
 
@@ -179,8 +184,10 @@ function renderContent(content: string) {
 
 // ---- Main message component ----
 
-export function AIChatMessage({ message }: { message: ChatMessage }) {
+export function AIChatMessage({ message }: { message: ChatMessage | ParoChatMessage }) {
   const isUser = message.role === "user"
+  const acme-deploy = (message as ParoChatMessage).acme-deploy
+  const vote = useAIStore((s) => s.vote)
 
   return (
     <div
@@ -223,6 +230,76 @@ export function AIChatMessage({ message }: { message: ChatMessage }) {
               {message.toolCalls.map((tc) => (
                 <ToolCallBlock key={tc.id} toolCall={tc} />
               ))}
+            </div>
+          )}
+
+          {/* acme-deploy metadata: latency, mode, confidence, vote */}
+          {!isUser && acme-deploy && (
+            <div className="mt-2 flex flex-wrap items-center gap-1.5 border-t border-border/40 pt-2">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                vigil · {acme-deploy.mode}
+              </span>
+              <span className="font-mono text-[10px] text-primary/80">
+                {acme-deploy.latency_ms}ms
+              </span>
+              {acme-deploy.confidence && (
+                <>
+                  <ConfidenceBadge value={acme-deploy.confidence.overall} label="conf" />
+                </>
+              )}
+              <div className="ml-auto flex items-center gap-0.5">
+                <button
+                  type="button"
+                  onClick={() => vote(acme-deploy.query_id, "up")}
+                  disabled={!!acme-deploy.voted}
+                  className={cn(
+                    "rounded p-1 transition-colors",
+                    acme-deploy.voted === "up"
+                      ? "text-emerald-400 bg-emerald-400/15"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
+                    acme-deploy.voted && acme-deploy.voted !== "up" && "opacity-30 cursor-not-allowed",
+                  )}
+                  aria-label="thumbs up"
+                >
+                  <ThumbsUp className="size-3" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => vote(acme-deploy.query_id, "down")}
+                  disabled={!!acme-deploy.voted}
+                  className={cn(
+                    "rounded p-1 transition-colors",
+                    acme-deploy.voted === "down"
+                      ? "text-red-400 bg-red-400/15"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
+                    acme-deploy.voted && acme-deploy.voted !== "down" && "opacity-30 cursor-not-allowed",
+                  )}
+                  aria-label="thumbs down"
+                >
+                  <ThumbsDown className="size-3" />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* acme-deploy sources — top-k retrieved hits */}
+          {!isUser && acme-deploy && acme-deploy.hits.length > 0 && (
+            <details className="mt-2">
+              <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-wider text-muted-foreground hover:text-foreground">
+                sources {acme-deploy.hits.length} shown
+              </summary>
+              <div className="mt-2">
+                <SourceList hits={acme-deploy.hits} />
+              </div>
+            </details>
+          )}
+
+          {/* acme-deploy per-layer confidence breakdown */}
+          {!isUser && acme-deploy?.confidence && (
+            <div className="mt-2 grid grid-cols-3 gap-1.5">
+              <ConfidenceBadge value={acme-deploy.confidence.retrieval} label="retrieve" />
+              <ConfidenceBadge value={acme-deploy.confidence.reranker} label="rerank" />
+              <ConfidenceBadge value={acme-deploy.confidence.llm} label="LLM" />
             </div>
           )}
         </div>
