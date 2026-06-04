@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { useAIStore, type AIMode } from "@/lib/stores/ai-store"
+import { useAIStore, type AIMode, type ParoMode } from "@/lib/stores/ai-store"
 import { AIChatMessage } from "@/components/ai/ai-chat-message"
 import { SystemSummary } from "@/components/ai/system-summary"
 
@@ -22,6 +22,8 @@ export function AIAssistantPanel() {
     sendMessage,
     aiMode,
     setAIMode,
+    paroMode,
+    setParoMode,
   } = useAIStore()
 
   const [input, setInput] = React.useState("")
@@ -105,7 +107,7 @@ export function AIAssistantPanel() {
               <Sparkles className="size-4 text-primary" />
             </div>
             <h2 className="font-heading text-sm font-semibold text-foreground">
-              AI Assistant
+              vigil chat
             </h2>
             <Badge variant="secondary" className="text-[11px]">
               {currentModule}
@@ -122,7 +124,38 @@ export function AIAssistantPanel() {
           </Button>
         </div>
 
-        {/* Mode toggle */}
+        {/* acme-deploy retrieval mode (v1 dense / v6 hybrid+rerank) */}
+        <div className="shrink-0 border-b border-border/30 px-4 py-2">
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+              Mode
+            </span>
+            <div className="flex items-center gap-0.5 rounded-md bg-muted/40 p-0.5">
+              {(
+                [
+                  { mode: "v1" as ParoMode, label: "v1 (dense)" },
+                  { mode: "v6" as ParoMode, label: "v6 (hybrid + rerank)" },
+                ] as const
+              ).map(({ mode, label }) => (
+                <button
+                  key={mode}
+                  type="button"
+                  onClick={() => setParoMode(mode)}
+                  className={cn(
+                    "rounded px-2 py-0.5 font-mono text-[10px] transition-colors",
+                    paroMode === mode
+                      ? "bg-primary text-background"
+                      : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* AI cost mode toggle */}
         <div className="shrink-0 border-b border-border/50 px-4 py-2">
           <div className="flex items-center gap-1 rounded-lg bg-muted/50 p-0.5">
             {(
@@ -168,7 +201,7 @@ export function AIAssistantPanel() {
                 </div>
                 <div className="flex items-center gap-2 rounded-lg bg-background px-3 py-2">
                   <span className="text-[13px] text-muted-foreground">
-                    Analyzing...
+                    vigil is searching...
                   </span>
                   <span className="flex gap-1">
                     <span className="size-1.5 animate-pulse rounded-full bg-primary/40" />
@@ -207,7 +240,7 @@ export function AIAssistantPanel() {
               value={input}
               onChange={handleInput}
               onKeyDown={handleKeyDown}
-              placeholder="Ask about your infrastructure..."
+              placeholder="Ask about runbooks, incidents, architecture... (Enter to send, Shift+Enter for newline)"
               rows={2}
               className={cn(
                 "flex-1 resize-none rounded-lg border border-input bg-background px-3 py-2 text-[14px] leading-relaxed text-foreground outline-none transition-colors",
