@@ -10,9 +10,14 @@ import {
   CheckCircle2,
   XCircle,
   Loader2,
+  ThumbsUp,
+  ThumbsDown,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { type ChatMessage, type ToolCall, type ToolCallStatus } from "@/lib/mock-data/ai-chat"
+import { type ParoChatMessage, useAIStore } from "@/lib/stores/ai-store"
+import { ConfidenceBadge } from "@/components/paro/confidence-badge"
+import { SourceList } from "@/components/paro/source-list"
 
 // ---- Relative time helper ----
 
@@ -179,8 +184,10 @@ function renderContent(content: string) {
 
 // ---- Main message component ----
 
-export function AIChatMessage({ message }: { message: ChatMessage }) {
+export function AIChatMessage({ message }: { message: ChatMessage | ParoChatMessage }) {
   const isUser = message.role === "user"
+  const paro = (message as ParoChatMessage).paro
+  const vote = useAIStore((s) => s.vote)
 
   return (
     <div
@@ -223,6 +230,76 @@ export function AIChatMessage({ message }: { message: ChatMessage }) {
               {message.toolCalls.map((tc) => (
                 <ToolCallBlock key={tc.id} toolCall={tc} />
               ))}
+            </div>
+          )}
+
+          {/* paro metadata: latency, mode, confidence, vote */}
+          {!isUser && paro && (
+            <div className="mt-2 flex flex-wrap items-center gap-1.5 border-t border-border/40 pt-2">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                vigil · {paro.mode}
+              </span>
+              <span className="font-mono text-[10px] text-primary/80">
+                {paro.latency_ms}ms
+              </span>
+              {paro.confidence && (
+                <>
+                  <ConfidenceBadge value={paro.confidence.overall} label="conf" />
+                </>
+              )}
+              <div className="ml-auto flex items-center gap-0.5">
+                <button
+                  type="button"
+                  onClick={() => vote(paro.query_id, "up")}
+                  disabled={!!paro.voted}
+                  className={cn(
+                    "rounded p-1 transition-colors",
+                    paro.voted === "up"
+                      ? "text-emerald-400 bg-emerald-400/15"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
+                    paro.voted && paro.voted !== "up" && "opacity-30 cursor-not-allowed",
+                  )}
+                  aria-label="thumbs up"
+                >
+                  <ThumbsUp className="size-3" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => vote(paro.query_id, "down")}
+                  disabled={!!paro.voted}
+                  className={cn(
+                    "rounded p-1 transition-colors",
+                    paro.voted === "down"
+                      ? "text-red-400 bg-red-400/15"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
+                    paro.voted && paro.voted !== "down" && "opacity-30 cursor-not-allowed",
+                  )}
+                  aria-label="thumbs down"
+                >
+                  <ThumbsDown className="size-3" />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* paro sources — top-k retrieved hits */}
+          {!isUser && paro && paro.hits.length > 0 && (
+            <details className="mt-2">
+              <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-wider text-muted-foreground hover:text-foreground">
+                sources {paro.hits.length} shown
+              </summary>
+              <div className="mt-2">
+                <SourceList hits={paro.hits} />
+              </div>
+            </details>
+          )}
+
+          {/* paro per-layer confidence breakdown */}
+          {!isUser && paro?.confidence && (
+            <div className="mt-2 grid grid-cols-3 gap-1.5">
+              <ConfidenceBadge value={paro.confidence.retrieval} label="retrieve" />
+              <ConfidenceBadge value={paro.confidence.reranker} label="rerank" />
+              <ConfidenceBadge value={paro.confidence.llm} label="LLM" />
             </div>
           )}
         </div>
