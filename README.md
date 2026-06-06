@@ -34,7 +34,7 @@ A DevSecOps command center for teams that don't want to put their reliability da
 
 | Surface | What it does | Who uses it |
 |---|---|---|
-| **Web dashboard** | 6 tabs: SLA / SLO / SLI / MTTD / MTTR / Extra. Multi-account (placen / shared / nw / dp pattern). Adaptive SigNoz watchlists, P0–P3 auto-classification with Slack ⇄ sync, incident analysis workbench with Slack-thread import. | The whole team, plus on-call |
+| **Web dashboard** | 6 tabs: SLA / SLO / SLI / MTTD / MTTR / Extra. Multi-account (e.g. `prod / shared / data / sandbox` pattern). Adaptive SigNoz watchlists, P0–P3 auto-classification with Slack ⇄ sync, incident analysis workbench with Slack-thread import. | The whole team, plus on-call |
 | **Local sync agent** | A 30-line shell script that clones your team brain repo to `~/.vigil/brain` and `git pull --rebase`s every 60 min. Your existing Claude Code session reads from there directly — no API call needed. | Every engineer on their laptop |
 
 ### Three layers, one source of truth
@@ -72,6 +72,18 @@ We had a chat panel in v4 (then named *teammate*). Engineers ignored it. They al
 - **Individual reasoning** (an engineer asking "what runbook covers this") → local Claude Code reading `~/.vigil/brain` directly
 
 The brain repo is the same in both. The surfaces are different.
+
+## What the local LLM is (and isn't) for
+
+Vigil treats the self-hosted LLM as a component on a trust ladder, not a brain. It is trusted for exactly two jobs: **embeddings** — turning a symptom into a vector for similarity search, which is deterministic-feeling and fast — and **draft generation** — producing postmortem drafts that are pushed as `DRAFT` and never auto-published, so a human always ratifies before anything becomes canonical.
+
+It is deliberately *not* used for:
+
+- **A central chat UI.** Removed in v5 (see *Why this and not chat-based brains?* above) — engineers won't context-switch to a website mid-incident. A local-sync agent replaces it: your existing tooling reads the brain as files.
+- **LLM anomaly prediction.** Kept behind a disabled flag. Prediction's false-positive rate burns on-call trust faster than it saves toil.
+- **Autonomous remediation.** Never without SLO budget gates and human approval.
+
+The rule: **the model may propose; it may never decide.** Everything it touches is either deterministic or human-ratified. The full mapping of job → engine → trust level → gate is in [`docs/llm-role-tiers.md`](docs/llm-role-tiers.md).
 
 ---
 
