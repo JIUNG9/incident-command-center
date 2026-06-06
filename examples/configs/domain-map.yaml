@@ -1,0 +1,35 @@
+# Domain map for a mixed-domain corpus.
+#
+# Maps each source unit (Jira project key, Confluence space key, Slack
+# channel name) to a domain. Retrieval is scoped to the requested domain
+# set (default: eng), and any unit NOT listed here falls into `unknown`,
+# which is excluded from retrieval by default.
+#
+# Load with:  vigil.domain_routing.DomainMap.from_file("domain-map.yaml")
+#
+# The keys below are GENERIC examples. Replace them with your own project
+# keys, space keys, and channel names. Keys are matched case-insensitively.
+#
+# Review cadence: walk the `unknown` bucket weekly. A doc that keeps landing
+# in `unknown` is a new source unit nobody has classified yet — add it here
+# (to `eng`, `biz`, or whatever domains you run) so it stops being excluded.
+
+# Jira project keys -> domain
+jira:
+  INCD: eng      # incident tracking
+  INFRA: eng     # infrastructure
+  SALES: biz     # sales pipeline
+  FIN: biz       # finance
+
+# Confluence space keys -> domain
+confluence:
+  ENG: eng       # engineering space
+  OPS: eng       # operations runbooks
+  BIZ: biz       # business / GTM space
+
+# Slack channel names (without the leading #) -> domain
+slack:
+  incidents: eng
+  platform: eng
+  sales-ops: biz
+  finance: biz
