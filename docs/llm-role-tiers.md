@@ -5,6 +5,11 @@ doc says which job runs on which engine and what gate each one needs. The
 guiding rule is one line: **the model may propose; it may never decide.**
 Everything the model touches is either deterministic or human-ratified.
 
+The same rule governs retrieval scope: [`docs/domain-routing.md`](domain-routing.md)
+keeps a mixed engineering/business corpus clean by deciding domain from
+provenance, not from the model — a reranker proposes within the filter, but
+the deterministic boundary is not the model's to set.
+
 ## The trust ladder
 
 | Job | Engine | Trust level | Gate |

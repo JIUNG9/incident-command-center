@@ -83,7 +83,7 @@ It is deliberately *not* used for:
 - **LLM anomaly prediction.** Kept behind a disabled flag. Prediction's false-positive rate burns on-call trust faster than it saves toil.
 - **Autonomous remediation.** Never without SLO budget gates and human approval.
 
-The rule: **the model may propose; it may never decide.** Everything it touches is either deterministic or human-ratified. The full mapping of job → engine → trust level → gate is in [`docs/llm-role-tiers.md`](docs/llm-role-tiers.md).
+The rule: **the model may propose; it may never decide.** Everything it touches is either deterministic or human-ratified. The full mapping of job → engine → trust level → gate is in [`docs/llm-role-tiers.md`](docs/llm-role-tiers.md). The same provenance-over-model principle scopes retrieval across a mixed engineering/business corpus — see [`docs/domain-routing.md`](docs/domain-routing.md).
 
 ---
 
