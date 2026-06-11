@@ -34,6 +34,10 @@ except ImportError as exc:
 
 app = FastAPI(title="vigil-chat-api", version="1.0.0")
 
+from vigil.chat_api.detective import detective_router  # noqa: E402
+
+app.include_router(detective_router)
+
 
 # ---------------------------------------------------------------------------
 # Config
