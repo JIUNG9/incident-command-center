@@ -3,15 +3,27 @@
 #
 # Uses PyPI Trusted Publisher (OIDC) — no API token in repository secrets.
 #
+# STATUS: not configured yet. The v5.0.0 run failed with
+#   invalid-publisher: valid token, but no corresponding publisher
+# which means PyPI has no publisher matching these claims. Nothing in this repo can
+# fix that — it is a one-time setting in the PyPI account UI.
+#
 # One-time setup on PyPI:
 #   1. Go to https://pypi.org/manage/account/publishing/
 #   2. Add a "pending publisher" with:
 #        PyPI Project Name:   vigil-devsecops
 #        Owner:               JIUNG9
-#        Repository name:     vigil
+#        Repository name:     devsecops-command-center
 #        Workflow filename:   publish.yml
 #        Environment name:    pypi
 #   3. After the first successful run, the publisher becomes "trusted".
+#
+# NOTE on the repository name: this repo was renamed teammate -> vigil ->
+# devsecops-command-center (2026-08-04). Trusted-publisher claims match on the
+# repository name, and GitHub's URL redirect does NOT apply to the OIDC claim. So
+# the value above must be the CURRENT name. If a publisher was previously
+# configured against `vigil` or `teammate`, it will no longer match and has to be
+# re-added with the new name.
 #
 # Trigger: pushing a tag matching v*.*.* on main.
 # =============================================================================
