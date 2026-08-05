@@ -100,9 +100,9 @@ all = [
 vigil = "vigil.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/JIUNG9/teammate"
-Repository = "https://github.com/JIUNG9/teammate"
-Issues = "https://github.com/JIUNG9/teammate/issues"
+Homepage = "https://github.com/JIUNG9/devsecops-command-center"
+Repository = "https://github.com/JIUNG9/devsecops-command-center"
+Issues = "https://github.com/JIUNG9/devsecops-command-center/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/vigil"]

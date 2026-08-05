@@ -55,12 +55,17 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install -e ".[rag]"
+      # The console script is `vigil`, not `teammate`. It was renamed in the
+      # teammate -> vigil move and this job was never updated, so every run since
+      # has failed with "teammate: command not found" (exit 127) while the four
+      # pytest/shellcheck jobs passed. Entry point is defined in pyproject.toml
+      # [project.scripts].
       - name: scaffold a brain in /tmp
         run: |
-          teammate scaffold /tmp/test-brain --team-name "ci-team"
+          vigil scaffold /tmp/test-brain --team-name "ci-team"
           test -f /tmp/test-brain/CLAUDE.md
       - name: init runs (Ollama not present, expected to fall back)
         run: |
           cd /tmp/test-brain
-          teammate init || echo "init may exit non-zero without Ollama; that's expected on CI"
-          teammate stats
+          vigil init || echo "init may exit non-zero without Ollama; that's expected on CI"
+          vigil stats

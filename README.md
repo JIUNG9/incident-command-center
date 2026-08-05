@@ -2,7 +2,7 @@
 
 > **A self-hosted DevSecOps command center.** Reliability ops, not chat. Six tabs over a git-backed corpus that auto-imports Jira / Confluence / GitHub / Slack. Engineers' Claude Code reads the brain locally; the dashboard is for the team's collective view. Private-VPC, no SaaS, no per-seat fee.
 
-[![CI](https://github.com/JIUNG9/vigil/actions/workflows/ci.yml/badge.svg)](https://github.com/JIUNG9/vigil/actions/workflows/ci.yml)
+[![CI](https://github.com/JIUNG9/devsecops-command-center/actions/workflows/ci.yml/badge.svg)](https://github.com/JIUNG9/devsecops-command-center/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/vigil-devsecops.svg)](https://pypi.org/project/vigil-devsecops/)
 [![Python](https://img.shields.io/pypi/pyversions/vigil-devsecops.svg)](https://pypi.org/project/vigil-devsecops/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -26,7 +26,7 @@ That's it. The first run clones a template brain repo into `~/.vigil/brain`, dro
 | Pre-baked watchlists for SigNoz-style anomalies | `~/.vigil/brain/watchlist/*.yaml` |
 | One-line CI hook to flag risky Terraform plans before apply | `vigil impact preview <plan>` |
 
-> **About the rename**: this project was originally **teammate** (v0.10 → v4.0.0). Versions 5.0.0+ ship as **Vigil**. The GitHub repo redirects from `JIUNG9/teammate` to `JIUNG9/vigil`; legacy `TEAMMATE_*` env vars are preserved for interface compatibility. The story of the rename — and what we cut to get to v5 — is in [docs/series-7/](docs/series-7/).
+> **About the rename**: this project was originally **teammate** (v0.10 → v4.0.0). Versions 5.0.0+ ship as **Vigil**. The repo has been renamed twice — `JIUNG9/teammate` -> `JIUNG9/vigil` -> `JIUNG9/devsecops-command-center`; GitHub redirects all of the old URLs; legacy `TEAMMATE_*` env vars are preserved for interface compatibility. The story of the rename — and what we cut to get to v5 — is in [docs/series-7/](docs/series-7/).
 
 ## What Vigil is
 
@@ -100,7 +100,7 @@ You're setting up the brain for your team. You'll do this once for the org.
 ```bash
 pip install vigil-devsecops
 # or, if your team already uses Claude Code's plugin marketplace:
-claude plugin install JIUNG9/vigil
+claude plugin install JIUNG9/devsecops-command-center
 ```
 
 **2. Scaffold an empty team-brain directory.**
@@ -180,7 +180,7 @@ curl -fsSL https://claude.ai/install.sh | sh
 ```bash
 pip install vigil-devsecops
 # or via the Claude Code plugin marketplace:
-claude plugin install JIUNG9/vigil
+claude plugin install JIUNG9/devsecops-command-center
 ```
 
 **3. Clone the team-brain repo.**
