@@ -9,6 +9,7 @@ Three sources converge on one DB row + one pre-load pipeline:
 from __future__ import annotations
 
 import enum
+import json
 import logging
 import os
 import uuid
@@ -89,39 +90,78 @@ def create_incident(
     return incident
 
 
-def transition(incident_id: str, target_state: IncidentState, actor: str) -> bool:
-    """State transition with optimistic locking (version-based)."""
+# Legal moves. RESOLVED and DISMISSED are terminal: a recurrence is a new incident,
+# so resolved_at and the postmortem are written once.
+ALLOWED_TRANSITIONS: dict[IncidentState, frozenset[IncidentState]] = {
+    IncidentState.TRIAGE: frozenset({IncidentState.OPEN, IncidentState.DISMISSED}),
+    IncidentState.OPEN: frozenset(
+        {IncidentState.ACTIVE, IncidentState.RESOLVED, IncidentState.DISMISSED}
+    ),
+    IncidentState.ACTIVE: frozenset({IncidentState.RESOLVED}),
+    IncidentState.RESOLVED: frozenset(),
+    IncidentState.DISMISSED: frozenset(),
+}
+
+
+class TransitionResult(enum.StrEnum):
+    OK = "ok"
+    NOT_FOUND = "not_found"
+    ILLEGAL = "illegal"          # incident exists but isn't in a state that may move there
+    UNAVAILABLE = "unavailable"  # no psycopg / no DSN
+
+
+def can_transition(current: IncidentState, target: IncidentState) -> bool:
+    return target in ALLOWED_TRANSITIONS[current]
+
+
+def try_transition(incident_id: str, target_state: IncidentState, actor: str) -> TransitionResult:
+    """Move an incident to target_state if its current state allows it.
+
+    The legality check lives in the UPDATE's WHERE clause, so check and write are one
+    statement: two racing requests can't both pass a stale read.
+    """
     try:
         import psycopg
     except ImportError:
         log.error("psycopg not installed; cannot transition state")
-        return False
+        return TransitionResult.UNAVAILABLE
 
     dsn = os.environ.get("POSTGRES_DSN", "")
     if not dsn:
         log.error("POSTGRES_DSN not set")
-        return False
+        return TransitionResult.UNAVAILABLE
+
+    sources = sorted(s.value for s, targets in ALLOWED_TRANSITIONS.items() if target_state in targets)
 
     with psycopg.connect(dsn) as conn, conn.cursor() as cur:
         cur.execute(
             """UPDATE incidents
                    SET state = %s, version = version + 1,
                        resolved_at = CASE WHEN %s = 'resolved' THEN now() ELSE resolved_at END
-                   WHERE id = %s RETURNING version""",
-            (target_state.value, target_state.value, incident_id),
+                   WHERE id = %s AND state = ANY(%s) RETURNING version""",
+            (target_state.value, target_state.value, incident_id, sources),
         )
-        row = cur.fetchone()
-        if not row:
-            return False
-        # Insert audit event
+        if not cur.fetchone():
+            cur.execute("SELECT state FROM incidents WHERE id = %s", (incident_id,))
+            row = cur.fetchone()
+            if not row:
+                return TransitionResult.NOT_FOUND
+            log.warning("incident %s: %s -> %s refused (actor %s)",
+                        incident_id, row[0], target_state.value, actor)
+            return TransitionResult.ILLEGAL
         cur.execute(
             """INSERT INTO incident_events (incident_id, event_type, actor, payload)
                    VALUES (%s, 'state_change', %s, %s::jsonb)""",
-            (incident_id, actor, f'{{"new_state": "{target_state.value}"}}'),
+            (incident_id, actor, json.dumps({"new_state": target_state.value})),
         )
         conn.commit()
     log.info("incident %s → %s by %s", incident_id, target_state.value, actor)
-    return True
+    return TransitionResult.OK
+
+
+def transition(incident_id: str, target_state: IncidentState, actor: str) -> bool:
+    """Bool wrapper over try_transition for callers that don't need the reason."""
+    return try_transition(incident_id, target_state, actor) is TransitionResult.OK
 
 
 def _persist(incident: Incident) -> None:

@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+- Incident state changes are now checked against a transition table (`ALLOWED_TRANSITIONS`).
+  Before, `POST /incident/<id>/transition` would move any incident to any state, so a
+  second `resolved` rewrote `resolved_at` and re-ran the postmortem drafter, and a
+  resolved incident could be reopened. `resolved` and `dismissed` are terminal. The check
+  is part of the UPDATE's WHERE clause, so racing requests can't both pass it. A refused
+  move returns 409 (was 404 for everything); no incident store returns 503.
+
 ## [5.0.2] — 2026-05-29
 
 ### Added
