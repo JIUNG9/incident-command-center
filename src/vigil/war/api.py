@@ -155,14 +155,18 @@ async def post_event(incident_id: str, req: EventRequest):
 
 @app.post("/incident/{incident_id}/transition")
 async def transition_incident(incident_id: str, req: TransitionRequest):
-    from vigil.war.alert_bridge import IncidentState, transition
+    from vigil.war.alert_bridge import IncidentState, TransitionResult, try_transition
     try:
         target = IncidentState(req.target_state)
     except ValueError as exc:
         raise HTTPException(400, f"unknown state: {req.target_state}") from exc
-    ok = transition(incident_id, target, req.actor)
-    if not ok:
+    result = try_transition(incident_id, target, req.actor)
+    if result is TransitionResult.NOT_FOUND:
         raise HTTPException(404, "incident not found")
+    if result is TransitionResult.ILLEGAL:
+        raise HTTPException(409, f"incident can't move to {target.value} from its current state")
+    if result is TransitionResult.UNAVAILABLE:
+        raise HTTPException(503, "incident store unavailable")
     await _publish_sse(incident_id, {"type": "state_change", "actor": req.actor,
                                      "payload": {"new_state": target.value}})
 
