@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { fetchMttd, type MttdPoint } from "@/lib/acme-deploy-api"
+import { fetchMttd, type MttdPoint } from "@/lib/vigil-api"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { AlertTriangle, Gauge } from "lucide-react"
