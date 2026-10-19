@@ -7,7 +7,7 @@ Env vars:
     ATLASSIAN_API_TOKEN   required
     ATLASSIAN_EMAIL       required (basic-auth username)
     JIRA_BASE_URL         default https://<YOUR_DOMAIN>.atlassian.net
-    JIRA_PROJECTS         comma-separated, e.g. "NEXUS,PLAT,PLATFORM"
+    JIRA_PROJECTS         comma-separated, e.g. "OPS,PLAT,PLATFORM"
 """
 
 from __future__ import annotations

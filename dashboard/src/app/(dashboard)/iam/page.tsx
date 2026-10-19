@@ -111,11 +111,11 @@ function RolesOverviewTab({ accountFilter }: { accountFilter: string | null }) {
     ? mockIAMRoles.filter(
         (r) =>
           r.account ===
-          (accountFilter === "nx"
-            ? "nexus"
-            : accountFilter === "nw"
+          (accountFilter === "hub"
+            ? "hub"
+            : accountFilter === "prod-a"
               ? "prod-a"
-              : accountFilter === "dp"
+              : accountFilter === "prod-b"
                 ? "prod-b"
                 : accountFilter)
       )
@@ -277,11 +277,11 @@ function LeastPrivilegeTab({
     ? mockLeastPrivilegeRecommendations.filter(
         (r) =>
           r.account ===
-          (accountFilter === "nx"
-            ? "nexus"
-            : accountFilter === "nw"
+          (accountFilter === "hub"
+            ? "hub"
+            : accountFilter === "prod-a"
               ? "prod-a"
-              : accountFilter === "dp"
+              : accountFilter === "prod-b"
                 ? "prod-b"
                 : accountFilter)
       )
@@ -443,11 +443,11 @@ function CloudTrailTab({ accountFilter }: { accountFilter: string | null }) {
     ? mockCloudTrailEvents.filter(
         (e) =>
           e.account ===
-          (accountFilter === "nx"
-            ? "nexus"
-            : accountFilter === "nw"
+          (accountFilter === "hub"
+            ? "hub"
+            : accountFilter === "prod-a"
               ? "prod-a"
-              : accountFilter === "dp"
+              : accountFilter === "prod-b"
                 ? "prod-b"
                 : accountFilter)
       )
@@ -623,11 +623,11 @@ function AccessMatrixTab({
     ? mockAccessMatrix.filter(
         (m) =>
           m.account ===
-          (accountFilter === "nx"
-            ? "nexus"
-            : accountFilter === "nw"
+          (accountFilter === "hub"
+            ? "hub"
+            : accountFilter === "prod-a"
               ? "prod-a"
-              : accountFilter === "dp"
+              : accountFilter === "prod-b"
                 ? "prod-b"
                 : accountFilter)
       )

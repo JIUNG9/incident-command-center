@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { fetchTimeline, type TimelineRow } from "@/lib/acme-deploy-api"
+import { fetchTimeline, type TimelineRow } from "@/lib/vigil-api"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -95,7 +95,7 @@ export default function TimelinePage() {
                 {error}
               </div>
               <div className="mt-2 font-mono text-[11px] text-muted-foreground">
-                Local dev: <code className="rounded bg-muted px-1">kubectl --context=nx-prod -n vigil-agent port-forward svc/vigil-chat-api 8080:80</code>
+                Local dev: <code className="rounded bg-muted px-1">kubectl --context=hub-prod -n vigil-agent port-forward svc/vigil-chat-api 8080:80</code>
               </div>
             </div>
           </CardContent>
