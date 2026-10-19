@@ -275,10 +275,10 @@ Confluence CQL has two non-obvious quirks I discovered the hard way:
 
 ```python
 # This returns HTTP 400 "Could not parse cql":
-"space IN (DEVOPS, NEXUS, INFRA) AND lastmodified > '...'"
+"space IN (DEVOPS, PLATFORM, INFRA) AND lastmodified > '...'"
 
 # This works:
-"space IN (\"DEVOPS\",\"NEXUS\",\"INFRA\") AND lastmodified > '...'"
+"space IN (\"DEVOPS\",\"PLATFORM\",\"INFRA\") AND lastmodified > '...'"
 ```
 
 The error message gives you nothing useful — just `BadRequestException: Could not parse cql:`. The quotes are mandatory for multi-space `IN` clauses.

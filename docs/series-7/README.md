@@ -1,6 +1,6 @@
 # Series 7 — Building Vigil (formerly *teammate*)
 
-> **2026-05-19 update**: the project formerly called *teammate* was renamed to **Vigil** at v5.0.0. The original 7-article series in this directory is preserved as a historical artifact of the v0.10 → v4.0.0 design. The current shipping content is the **consolidated 3-article series** under `nexus/medium-final/`.
+> **2026-05-19 update**: the project formerly called *teammate* was renamed to **Vigil** at v5.0.0. The original 7-article series in this directory is preserved as a historical artifact of the v0.10 → v4.0.0 design. The current shipping content is the **consolidated 3-article series**, drafted outside this repo.
 
 ## v5 (current — 3 consolidated articles)
 
