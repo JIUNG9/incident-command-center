@@ -24,7 +24,7 @@ The brain itself lives in **a private git repo**. Every change is PR-reviewable 
 - War-rooms became an "analysis workbench" page; the in-app chat panel was cut because Slack already does that job.
 - MTTD became *automated by default* (action-first, ratify-after): adaptive baseline learner auto-applies SigNoz rules with revert.
 - New incident path: Slack message → right-click → "Import to Vigil" → LLM + system analysis → MTTR incident.
-- Multi-account aware (acme-corp / shared / nw / dp pattern) via service catalog with `account` column.
+- Multi-account aware (hub / shared-services / prod-a / prod-b pattern) via service catalog with `account` column.
 
 The series-7 articles in `docs/series-7/` are the long-form explainer for each change.
 
