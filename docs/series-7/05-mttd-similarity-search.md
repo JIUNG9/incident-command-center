@@ -80,7 +80,7 @@ The output is a list of similar past incidents:
 ```
 INFRA-2391 (score 0.89) — prod-b-rds storage exhaustion (5/12) — resolved by rolling back OPS-1834
 INCD-1102 (score 0.74)  — auth-server replica cascade (3/14)    — resolved by failover
-INCD-988  (score 0.61)  — nw-prod long-lived transaction (1/02) — resolved by kill connection
+INCD-988  (score 0.61)  — prod-a long-lived transaction (1/02) — resolved by kill connection
 ```
 
 This is the high-signal piece. It doesn't claim to predict anything. It just says "we've seen something like this before; here's what we did."
@@ -123,11 +123,11 @@ The Watch tab in the chat UI surfaces three things:
 │                    INCD-988                            │
 │  [✓ Approve & sync to SigNoz]  [Edit YAML]  [Reject]  │
 │                                                        │
-│  Watch: nw-prod-api heap usage > 80% for 5min         │
+│  Watch: prod-a-api heap usage > 80% for 5min          │
 │  confidence 0.71 — based on INCD-1077                 │
 │  [✓ Approve]  [Edit]  [Reject]                        │
 │                                                        │
-│  Watch: prod-b-rds autoscale storage > 90% ceiling   │
+│  Watch: prod-b-rds autoscale storage > 90% ceiling    │
 │  confidence 0.92 — based on INFRA-2391                │
 │  [✓ Approve]  [Edit]  [Reject]                        │
 └────────────────────────────────────────────────────────┘
@@ -137,9 +137,9 @@ The Watch tab in the chat UI surfaces three things:
 │  [Search past incidents]                              │
 │                                                        │
 │  Top 3 matches:                                       │
-│  INFRA-2391 (0.89) — prod-b-rds storage exhaustion   │
+│  INFRA-2391 (0.89) — prod-b-rds storage exhaustion    │
 │  INCD-1102  (0.74) — auth-server replica cascade      │
-│  INCD-988   (0.61) — nw-prod long-lived transaction   │
+│  INCD-988   (0.61) — prod-a long-lived transaction    │
 └────────────────────────────────────────────────────────┘
 ```
 
