@@ -165,7 +165,7 @@ tools = {
 }
 ```
 
-When the engineer asks Claude "what's the procedure for rolling back PN-1834?", Claude can call `mcp__teammate_war__warroom_context()` to get the current incident state, then `mcp__teammate_war__warroom_suggest_runbook(...)` to find relevant docs — all without leaving the conversation.
+When the engineer asks Claude "what's the procedure for rolling back OPS-1834?", Claude can call `mcp__teammate_war__warroom_context()` to get the current incident state, then `mcp__teammate_war__warroom_suggest_runbook(...)` to find relevant docs — all without leaving the conversation.
 
 The brain isn't somewhere over there. It's a tool Claude reaches for as naturally as `Bash` or `Read`.
 
@@ -192,7 +192,7 @@ if _is_destructive(cmd):
 
 The incident lead sees the pending request in the war-room UI:
 
-> 🔴 **jiung's Claude wants to run**: `kubectl delete pod dp-prod-rds-1`
+> 🔴 **jiung's Claude wants to run**: `kubectl delete pod prod-b-rds-1`
 > [Approve] [Deny]
 
 If approved, the original tool call succeeds. If denied, the engineer sees the block message and can ask in the war-room chat for clarification.

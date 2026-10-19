@@ -24,11 +24,11 @@ The design instinct that saved me was treating "off" as a first-class state, not
 
 ## The $200/month freezer
 
-When paro was running, my AWS account was paying about $200/month for it. Most of that wasn't the application — it was the **shape of running**: one extra node in the system nodegroup to schedule the qdrant pod ($77), two ALBs to terminate TLS at the edge ($34), a WAF Web ACL for the webhook ingress ($7), the rest in PVCs and small services.
+When the internal deployment was running, my AWS account was paying about $200/month for it. Most of that wasn't the application — it was the **shape of running**: one extra node in the system nodegroup to schedule the qdrant pod ($77), two ALBs to terminate TLS at the edge ($34), a WAF Web ACL for the webhook ingress ($7), the rest in PVCs and small services.
 
 When I turned it off, the bill dropped to about $11/month. The data — qdrant's 15,000+ embedded chunks, the Postgres schema, the bm25 index — all stayed on three EBS volumes. Restartable at any time. Just nothing running on top.
 
-Eleven dollars a month is roughly the cost of three cups of coffee. That's what it costs me to keep the option open to bring paro back without losing a week of indexer work. I'd pay that even if I never restarted.
+Eleven dollars a month is roughly the cost of three cups of coffee. That's what it costs me to keep the option open to bring it back without losing a week of indexer work. I'd pay that even if I never restarted.
 
 The $122 to $11 delta isn't the lesson, though. **Fifteen minutes** is the lesson. That's how long the off-switch took. Three commands: delete two Ingresses, scale a nodegroup, delete some orphans. The Terraform stays. The container images stay. The secrets stay. Everything that took weeks to build stays exactly where it is.
 
@@ -42,7 +42,7 @@ A few decisions paid off. None of them felt important at the time.
 
 **Persistent data on EBS, not in pod-local storage.** Qdrant runs from a 20 GiB PVC. Postgres runs from a 10 GiB PVC. Both are bound, both can survive a namespace delete if — and this is the important if — the PV reclaim policy is set to `Retain`. The default in Kubernetes is `Delete`. I caught this five minutes before tearing down the test environment for the first time. I'd recommend writing a Kyverno policy that requires `Retain` on any PVC larger than 5 GiB. The PV-deletes-volume default exists for legitimate reasons but the failure mode is silent and total.
 
-**ArgoCD as the only way to deploy.** Every Kubernetes resource in paro came from a YAML file in a git repo, applied by ArgoCD. When I deleted the ArgoCD Application, all 11 Deployments, 4 CronJobs, 2 Services, and 5 ConfigMaps went with it. One delete, the whole compute layer goes. If I'd been applying YAMLs directly with `kubectl apply`, the teardown would have been a 30-command scavenger hunt.
+**ArgoCD as the only way to deploy.** Every Kubernetes resource in the deployment came from a YAML file in a git repo, applied by ArgoCD. When I deleted the ArgoCD Application, all 11 Deployments, 4 CronJobs, 2 Services, and 5 ConfigMaps went with it. One delete, the whole compute layer goes. If I'd been applying YAMLs directly with `kubectl apply`, the teardown would have been a 30-command scavenger hunt.
 
 **Terraform creates resources, not data.** The Terraform repo defines the SQS queue, the ACM cert, the WAF, the Route53 records, the IAM role. None of it stores the actual data. Destroying it deletes resources; running `terraform apply` again recreates them in 3 minutes. The data lives in PVCs and AWS Secrets Manager, which are managed separately and have different lifecycle rules. **Compute is cattle. Data is pets.** Treating them differently in your IaC is the difference between a 15-minute restart and a "let me check if the backup is recent" panic.
 
@@ -58,7 +58,7 @@ Three things, all small, all the kind of thing you only catch the second time.
 
 **Write the off-switch into the runbook on day one.** I wrote the cutover runbook in February when I first deployed. It explained how to deploy. It did not explain how to undeploy. When I idled the service in May, I had to figure out the exact command sequence from scratch — what to delete, in what order, what stays. I wrote that down after, and the next person (probably future-me) gets to use it. Day-one runbooks should always have a symmetric "rollback" or "undeploy" section. Both halves are runbook content, not bonus material.
 
-**Set up the cost dashboard before the launch, not after.** I knew paro was costing ~$120/month because I went looking. The CloudWatch billing dashboard would have shown me that without any effort, if I'd configured it. Now I have an explicit "service-level cost" view per project — partitioned by tag — and I check it weekly. The $77 nodegroup line item would have caught my eye a week earlier if the dashboard had existed.
+**Set up the cost dashboard before the launch, not after.** I knew it was costing ~$120/month because I went looking. The CloudWatch billing dashboard would have shown me that without any effort, if I'd configured it. Now I have an explicit "service-level cost" view per project — partitioned by tag — and I check it weekly. The $77 nodegroup line item would have caught my eye a week earlier if the dashboard had existed.
 
 **Treat the "is it being used?" signal as a first-class metric.** I had no instrumentation for whether anyone was actually reaching for the search endpoint. I had to ask. The right pattern is a simple `usage_events` table — incrementing counters keyed by user and endpoint, written best-effort — with a daily rollup. Usage being zero or near-zero should be a Slack alert, not something you have to remember to query. If a service hasn't been used in 14 days, the question "should this be on?" should answer itself.
 
@@ -66,7 +66,7 @@ Three things, all small, all the kind of thing you only catch the second time.
 
 ## The 2-of-3 test
 
-When I documented the idle decision in the runbook, I wrote down three criteria. Restart paro when **two of three** are true:
+When I documented the idle decision in the runbook, I wrote down three criteria. Restart it when **two of three** are true:
 
 1. **Webhooks wired.** The continuous-learning loop has to actually close. Without GitHub + SigNoz at minimum pushing events into the system, the qdrant index freezes at whatever date it last ingested. A frozen brain decays fast: every passing day, the documentation it knows is more out of date.
 2. **Golden test set labeled.** Not 15 self-baselined pairs against the system's own current top-1 picks. 50+ human-judged QA pairs from real resolved incidents, with the gold doc-id confirmed by a person. Without this, "is v6 better than v1?" can't be measured, which means "should we be running v6?" is a vibes call.
@@ -109,4 +109,4 @@ The bias I'd push back on hardest is the one that says you should treat your own
 
 ---
 
-*This is part 9 of the Building Vigil series. Part 8 — [One tool, two names](08-rename-and-cutover.md) — covers the OSS/internal naming decision. The Vigil OSS at `pip install vigil-devsecops` is the externalized version of the engine; the internal one lives as `paro` and, as of this writing, is idled.*
+*This is part 9 of the Building Vigil series. Part 8 — [One tool, two names](08-rename-and-cutover.md) — covers the OSS/internal naming decision. The Vigil OSS at `pip install vigil-devsecops` is the externalized version of the engine; the internal one runs under a different name and, as of this writing, is idled.*

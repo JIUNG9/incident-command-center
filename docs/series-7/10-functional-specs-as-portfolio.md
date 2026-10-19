@@ -1,8 +1,8 @@
 # Functional specs as a portfolio artifact
 
-I spent a Tuesday afternoon writing eighteen functional specification documents on Confluence. Not for a deliverable. Not for a sprint. For a thing I haven't built yet — an extension of an internal SRE tool that I've been considering opening up into a full DevOps platform. I wrote them anyway. Here's why, and why I think more engineers should do this.
+I spent a Tuesday afternoon writing a stack of functional specification documents on our internal wiki. Not for a deliverable. Not for a sprint. For a thing I haven't built yet — an extension of an internal SRE tool that I've been considering opening up into a full DevOps platform. I wrote them anyway. Here's why, and why I think more engineers should do this.
 
-The tool is called `paro` internally and `Vigil` in its open-source form. Both names refer to the same engine: a self-hosted chat assistant over a team's runbooks, past incidents, Slack threads, and Jira tickets, plus a war-room state machine and the metrics that the team's reliability engineering cares about (MTTD, MTTR). I shipped v6 in late May and idled it the same week — the cost of running it exceeded the value at the time, but the value would come back the moment I had two specific blockers cleared. The story of that idle-then-restart cycle is in [part 8](08-rename-and-cutover.md) and [part 9](09-build-to-be-turned-off.md) of this series.
+The tool has one name inside my employer and is `Vigil` in its open-source form. Both names refer to the same engine: a self-hosted chat assistant over a team's runbooks, past incidents, Slack threads, and Jira tickets, plus a war-room state machine and the metrics that the team's reliability engineering cares about (MTTD, MTTR). I shipped v6 in late May and idled it the same week — the cost of running it exceeded the value at the time, but the value would come back the moment I had two specific blockers cleared. The story of that idle-then-restart cycle is in [part 8](08-rename-and-cutover.md) and [part 9](09-build-to-be-turned-off.md) of this series.
 
 This is what came next: I knew the chat surface alone wasn't going to justify the ongoing cost. The tool needed to be a platform. Eleven more tabs, multi-account scoping, DORA metrics, FinOps integration, an IAM audit view. I'd been borrowing the pattern from a project called Aegis — another open-source DevSecOps dashboard I'd looked at for inspiration. It already had nine of the eleven tabs I wanted, in good condition, with the components named well and a sensible information architecture. I could lift them.
 
@@ -38,7 +38,7 @@ The third, and this is the one that surprised me: writing the spec changes what 
 
 ## What the specs look like
 
-I used the same twelve-section structure for every page. Korean for the internal versions because the team reads Korean; English for the OSS-facing equivalents because that audience reads English. Both versions cover the same ground.
+I used the same twelve-section structure for every page. The internal versions are in the team's working language; the OSS-facing equivalents are in English because that audience reads English. Both versions cover the same ground.
 
 The twelve sections are deliberate. They're not the longest spec template I've used — that honor goes to a multi-page IEEE-style template I encountered at a previous job that had seventeen sections plus a glossary plus a traceability matrix. They're also not the shortest — some teams ship one-paragraph "What is it and why" descriptions and call it done.
 
@@ -56,7 +56,7 @@ A few things, mostly small.
 
 **The "glossary" section catches name collisions.** I'd been using `severity` and `p_class` interchangeably. When I wrote the glossary, I had to pick one. The spec said: `severity` for raw alert severity (ERROR / WARN / INFO), `p_class` for declared-incident classification (P0 / P1 / P2 / P3). Now the code is going to be more consistent because the spec forced the question.
 
-**The "data model" section catches schema gaps.** Every page that promised "per-account split" forced me to write "account_id column missing from `paro_war.incidents`." Now there's a single migration ticket instead of eight different "this needs a column" comments scattered across the docs.
+**The "data model" section catches schema gaps.** Every page that promised "per-account split" forced me to write "account_id column missing from `vigil_war.incidents`." Now there's a single migration ticket instead of eight different "this needs a column" comments scattered across the docs.
 
 **The "constraints" section catches the parts you'd rather not admit.** The chat-api currently runs at one replica because the bm25-index PVC pins it to an over-loaded AZ. That's not a feature; it's a capacity constraint. The spec says so. Future-me will be glad it's documented; otherwise I'd waste a day six months from now wondering why I made that choice.
 
@@ -106,4 +106,4 @@ The portfolio benefit is a side effect. The primary win is that you build better
 
 ---
 
-*Part 10 of the Building Vigil series. The functional specs that prompted this article are at Confluence id 357367903 (internal); the OSS equivalent lives at [`docs/devops-platform.md`](../../../../teammate-oss/docs/devops-platform.md). The companion roadmap for the Next.js implementation is at [`paro-chat-web/ROADMAP.md`](../../paro-chat-web/ROADMAP.md).*
+*Part 10 of the Building Vigil series. The functional specs that prompted this article are internal; the OSS equivalent lives at [`docs/devops-platform.md`](../devops-platform.md).*

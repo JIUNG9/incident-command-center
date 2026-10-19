@@ -153,7 +153,7 @@ archive/slack/devops/2026/05/14-messages.md:
 
 # #devops — 2026-05-14
 
-- **09:23 · Alice Park**: heads up, we're rolling back PN-1834. RDS CPU was spiking.
+- **09:23 · Alice Park**: heads up, we're rolling back OPS-1834. RDS CPU was spiking.
 - **09:24 · Min-jun Jo**: ack. I'll monitor replica lag.
 - **09:31 · Alice Park**: replica lag back to <100ms. resolved.
 ```
