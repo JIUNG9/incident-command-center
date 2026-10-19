@@ -895,9 +895,9 @@ def naming_list() -> None:
 @click.option(
     "--template",
     type=str,
-    default="nexus-style",
+    default="hub-style",
     show_default=True,
-    help="Starter template. One of: nexus-style, small-team, monorepo-only, strict-iac.",
+    help="Starter template. One of: hub-style, small-team, monorepo-only, strict-iac.",
 )
 @click.option("--force", is_flag=True, help="Overwrite an existing config.")
 def naming_init(template: str, force: bool) -> None:

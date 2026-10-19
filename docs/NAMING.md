@@ -148,12 +148,12 @@ Four starter templates ship with `vigil`:
 
 | Template          | Use case                                                      |
 |-------------------|---------------------------------------------------------------|
-| `nexus-style`     | Multi-domain org, full taxonomy, exceptional submodule slot.  |
+| `hub-style`     | Multi-domain org, full taxonomy, exceptional submodule slot.  |
 | `small-team`      | Three categories, one shared domain, no submodule.            |
 | `monorepo-only`   | Single repo; convention applies to top-level dirs inside it.  |
 | `strict-iac`      | IaC galaxy. Categories `{infra, ops}`, types `{tfmod, tfstate, k8s, docs}`. |
 
-Bootstrap with `vigil naming init --template nexus-style`. Print the
+Bootstrap with `vigil naming init --template hub-style`. Print the
 effective convention with `vigil naming list`. Test a candidate name
 with `vigil naming check acme-infra-core-billing-tfmod`.
 

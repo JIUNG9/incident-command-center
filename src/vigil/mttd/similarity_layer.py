@@ -8,11 +8,11 @@ This is the high-signal half of MTTD. We deliberately do NOT do
 LLM-prediction-of-novel-incidents — industry track record on that is bad.
 
 Input is a symptom string like:
-    "dp-prod-rds CPU 88% for 7m, log: idle in transaction, deploy 2h ago: PN-1834"
+    "prod-b-rds CPU 88% for 7m, log: idle in transaction, deploy 2h ago: OPS-1834"
 
 Output is a list of similar past incidents:
     [
-      {"key": "INFRA-2391", "title": "...", "score": 0.89, "resolution": "rollback PN-1834"},
+      {"key": "INFRA-2391", "title": "...", "score": 0.89, "resolution": "rollback OPS-1834"},
       {"key": "INCD-1102",  "title": "...", "score": 0.74, "resolution": "failover"},
     ]
 """

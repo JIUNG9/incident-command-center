@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { fetchActiveIncidents, type WarIncident } from "@/lib/paro-api"
+import { fetchActiveIncidents, type WarIncident } from "@/lib/vigil-api"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Siren, AlertTriangle, MessageSquare } from "lucide-react"
@@ -60,7 +60,7 @@ export default function WarPage() {
               <div className="font-mono text-sm font-bold text-red-400">vigil war API connection failed</div>
               <div className="mt-1 font-mono text-xs text-muted-foreground">{error}</div>
               <div className="mt-2 font-mono text-[11px] text-muted-foreground">
-                Local dev: <code className="rounded bg-muted px-1">kubectl --context=nx-prod -n vigil-agent port-forward svc/vigil-war-api 8081:80</code>
+                Local dev: <code className="rounded bg-muted px-1">kubectl --context=hub-prod -n vigil-agent port-forward svc/vigil-war-api 8081:80</code>
               </div>
             </div>
           </CardContent>

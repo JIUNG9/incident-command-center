@@ -6,8 +6,8 @@ gets its own markdown file under ``archive/github/<owner>/<repo>/<type>/<num-or-
 Env vars:
     GITHUB_PAT           required (classic PAT with repo scope, or fine-grained
                           with read access to the listed repos)
-    GITHUB_ORG           org/owner to crawl (e.g. "n-fnb")
-    GITHUB_REPOS         optional comma-list to restrict (e.g. "pn-app-nx-brain-api,pn-infra-gitops").
+    GITHUB_ORG           org/owner to crawl (e.g. "acme-corp")
+    GITHUB_REPOS         optional comma-list to restrict (e.g. "acme-app-hub-brain-api,acme-infra-gitops").
                           If unset, lists all repos in the org accessible to the PAT.
 """
 
