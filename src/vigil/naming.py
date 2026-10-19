@@ -568,8 +568,8 @@ def validate_name(name: str, conv: NamingConvention) -> ValidationResult:
 
 
 _TEMPLATE_BODIES: dict[str, str] = {
-    "nexus-style": """\
-# .vigil-naming.toml — nexus-style starter
+    "hub-style": """\
+# .vigil-naming.toml — hub-style starter
 # Pattern: {prefix}-{category}-{domain}-{service}[-{submodule}]-{type}
 #
 # This template mirrors the structural pattern of the canonical multi-account,

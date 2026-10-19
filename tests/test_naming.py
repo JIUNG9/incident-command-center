@@ -33,7 +33,7 @@ from vigil.validate import validate as run_validate
 # ---------- helpers ----------
 
 
-def _nexus_like_convention(language: str = "en") -> NamingConvention:
+def _hub_like_convention(language: str = "en") -> NamingConvention:
     """An in-memory convention that mirrors the canonical pattern with
     generic vocabulary. Use this for the bulk of pure-validator tests
     so we don't have to touch the filesystem."""
@@ -88,45 +88,45 @@ def _seed_brain(root: Path) -> None:
 
 
 def test_charset_rejects_uppercase():
-    conv = _nexus_like_convention()
+    conv = _hub_like_convention()
     res = validate_name("acme-app-core-Billing-api", conv)
     assert res.verdict is Verdict.FAIL
     assert "[a-z0-9-]" in res.reason
 
 
 def test_charset_rejects_underscore():
-    conv = _nexus_like_convention()
+    conv = _hub_like_convention()
     res = validate_name("acme_app_core_billing_api", conv)
     assert res.verdict is Verdict.FAIL
 
 
 def test_charset_rejects_space():
-    conv = _nexus_like_convention()
+    conv = _hub_like_convention()
     res = validate_name("acme app core billing api", conv)
     assert res.verdict is Verdict.FAIL
 
 
 def test_charset_rejects_consecutive_hyphens():
-    conv = _nexus_like_convention()
+    conv = _hub_like_convention()
     res = validate_name("acme--app-core-billing-api", conv)
     assert res.verdict is Verdict.FAIL
     assert "--" in res.reason or "consecutive" in res.reason.lower()
 
 
 def test_charset_rejects_leading_hyphen():
-    conv = _nexus_like_convention()
+    conv = _hub_like_convention()
     res = validate_name("-acme-app-core-billing-api", conv)
     assert res.verdict is Verdict.FAIL
 
 
 def test_charset_rejects_trailing_hyphen():
-    conv = _nexus_like_convention()
+    conv = _hub_like_convention()
     res = validate_name("acme-app-core-billing-api-", conv)
     assert res.verdict is Verdict.FAIL
 
 
 def test_charset_rejects_token_starting_with_digit():
-    conv = _nexus_like_convention()
+    conv = _hub_like_convention()
     res = validate_name("acme-app-core-billing-2api", conv)
     assert res.verdict is Verdict.FAIL
     # "leading digit" is the canonical reason here.
@@ -137,26 +137,26 @@ def test_charset_rejects_token_starting_with_digit():
 
 
 def test_token_count_too_few():
-    conv = _nexus_like_convention()
+    conv = _hub_like_convention()
     res = validate_name("acme-app-billing-api", conv)
     assert res.verdict is Verdict.FAIL
 
 
 def test_token_count_too_many():
-    conv = _nexus_like_convention()
+    conv = _hub_like_convention()
     # 7 tokens, but distinct so we hit the count check before dup check.
     res = validate_name("acme-app-core-billing-admin-extra-api", conv)
     assert res.verdict is Verdict.FAIL
 
 
 def test_token_count_exactly_five_ok():
-    conv = _nexus_like_convention()
+    conv = _hub_like_convention()
     res = validate_name("acme-infra-core-billing-tfmod", conv)
     assert res.verdict is Verdict.OK
 
 
 def test_token_count_exactly_six_ok_with_submodule():
-    conv = _nexus_like_convention()
+    conv = _hub_like_convention()
     res = validate_name("acme-app-shared-billing-admin-web", conv)
     assert res.verdict is Verdict.OK
     assert res.matched["submodule"] == "admin"
@@ -166,35 +166,35 @@ def test_token_count_exactly_six_ok_with_submodule():
 
 
 def test_prefix_must_match_dictionary():
-    conv = _nexus_like_convention()
+    conv = _hub_like_convention()
     res = validate_name("xyz-app-core-billing-api", conv)
     assert res.verdict is Verdict.FAIL
     assert "xyz" in res.reason
 
 
 def test_category_must_match_dictionary():
-    conv = _nexus_like_convention()
+    conv = _hub_like_convention()
     res = validate_name("acme-svc-core-billing-api", conv)
     assert res.verdict is Verdict.FAIL
     assert "svc" in res.reason
 
 
 def test_domain_must_match_dictionary():
-    conv = _nexus_like_convention()
+    conv = _hub_like_convention()
     res = validate_name("acme-app-galaxy-billing-api", conv)
     assert res.verdict is Verdict.FAIL
     assert "galaxy" in res.reason
 
 
 def test_service_strict_rejects_unknown():
-    conv = _nexus_like_convention()
+    conv = _hub_like_convention()
     res = validate_name("acme-app-core-thinger-api", conv)
     assert res.verdict is Verdict.FAIL
     assert "thinger" in res.reason
 
 
 def test_service_non_strict_allows_unknown():
-    base = _nexus_like_convention()
+    base = _hub_like_convention()
     relaxed = NamingConvention(
         prefix=base.prefix,
         category=base.category,
@@ -215,7 +215,7 @@ def test_service_non_strict_allows_unknown():
 
 
 def test_type_must_match_dictionary():
-    conv = _nexus_like_convention()
+    conv = _hub_like_convention()
     res = validate_name("acme-app-core-billing-thingy", conv)
     assert res.verdict is Verdict.FAIL
     assert "thingy" in res.reason
@@ -225,7 +225,7 @@ def test_type_must_be_last_token():
     """Type-token-last is structural — a name where the type appears
     earlier still fails because the LAST token must be the type, and a
     type word in a non-last slot lands in a slot that rejects it."""
-    conv = _nexus_like_convention()
+    conv = _hub_like_convention()
     # Type token "api" in domain slot — domain rejects it.
     res = validate_name("acme-app-api-billing-web", conv)
     assert res.verdict is Verdict.FAIL
@@ -237,7 +237,7 @@ def test_type_must_be_last_token():
 def test_duplicate_token_rejected_category_submodule():
     """The marquee duplicate case from check-repo-name.sh: 'app' at
     category and submodule positions."""
-    conv = _nexus_like_convention()
+    conv = _hub_like_convention()
     res = validate_name("acme-app-shared-billing-app-api", conv)
     assert res.verdict is Verdict.FAIL
 
@@ -245,7 +245,7 @@ def test_duplicate_token_rejected_category_submodule():
 def test_duplicate_token_rejected_anywhere():
     """Same token at any two positions trips rule 9, even when both
     positions individually accept the token."""
-    base = _nexus_like_convention()
+    base = _hub_like_convention()
     # `core` is a valid domain. We deliberately add it to the service
     # dictionary so the service-slot lookup passes — leaving the
     # duplicate-tokens rule as the only thing standing in the way.
@@ -272,7 +272,7 @@ def test_duplicate_token_rejected_anywhere():
 
 
 def test_exception_passes_unchecked():
-    conv = _nexus_like_convention()
+    conv = _hub_like_convention()
     res = validate_name("acme-docs", conv)
     assert res.verdict is Verdict.OK
     assert res.matched.get("exception") is True
@@ -281,7 +281,7 @@ def test_exception_passes_unchecked():
 def test_exception_with_garbage_still_passes():
     """Exception list is unconditional — the validator does not even
     look at the structural rules for an exempted name."""
-    base = _nexus_like_convention()
+    base = _hub_like_convention()
     conv = NamingConvention(
         prefix=base.prefix,
         category=base.category,
@@ -305,7 +305,7 @@ def test_exception_with_garbage_still_passes():
 
 
 def test_length_over_max_emits_warn_not_fail():
-    base = _nexus_like_convention()
+    base = _hub_like_convention()
     # Tighten max_length so we trip it without absurd names.
     conv = NamingConvention(
         prefix=base.prefix,
@@ -331,33 +331,33 @@ def test_length_over_max_emits_warn_not_fail():
 
 
 def test_submodule_absent_ok():
-    conv = _nexus_like_convention()
+    conv = _hub_like_convention()
     res = validate_name("acme-infra-core-billing-tfmod", conv)
     assert res.verdict is Verdict.OK
     assert res.matched["submodule"] is None
 
 
 def test_submodule_recommended_ok():
-    conv = _nexus_like_convention()
+    conv = _hub_like_convention()
     res = validate_name("acme-app-shared-billing-partner-web", conv)
     assert res.verdict is Verdict.OK
 
 
 def test_submodule_unrecommended_warns():
-    conv = _nexus_like_convention()
+    conv = _hub_like_convention()
     # `legacy` is not in the recommended set; structurally legal but warned.
     res = validate_name("acme-app-shared-billing-legacy-web", conv)
     assert res.verdict is Verdict.WARN
 
 
 def test_submodule_duplicating_category_fails():
-    conv = _nexus_like_convention()
+    conv = _hub_like_convention()
     res = validate_name("acme-app-shared-billing-infra-web", conv)
     assert res.verdict is Verdict.FAIL
 
 
 def test_submodule_duplicating_type_fails():
-    conv = _nexus_like_convention()
+    conv = _hub_like_convention()
     # `api` is a type token; using it as the submodule duplicates type.
     # We pick `web` as the actual type slot so the name parses through
     # the slot-by-slot check.
@@ -369,14 +369,14 @@ def test_submodule_duplicating_type_fails():
 
 
 def test_locale_en_message_text():
-    conv = _nexus_like_convention(language="en")
+    conv = _hub_like_convention(language="en")
     res = validate_name("acme-svc-core-billing-api", conv)
     assert res.verdict is Verdict.FAIL
     assert "category" in res.reason.lower() or "svc" in res.reason
 
 
 def test_locale_ko_message_text():
-    conv = _nexus_like_convention(language="ko")
+    conv = _hub_like_convention(language="ko")
     res = validate_name("acme-svc-core-billing-api", conv)
     assert res.verdict is Verdict.FAIL
     # Korean reason text — characters from check-repo-name.sh.
@@ -384,8 +384,8 @@ def test_locale_ko_message_text():
 
 
 def test_locale_en_and_ko_differ_for_same_input():
-    conv_en = _nexus_like_convention(language="en")
-    conv_ko = _nexus_like_convention(language="ko")
+    conv_en = _hub_like_convention(language="en")
+    conv_ko = _hub_like_convention(language="ko")
     name = "acme-svc-core-billing-api"
     res_en = validate_name(name, conv_en)
     res_ko = validate_name(name, conv_ko)
@@ -572,7 +572,7 @@ def test_cli_naming_list_renders(tmp_path: Path, monkeypatch):
 def test_cli_naming_init_template_writes_round_trippable_toml(tmp_path: Path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     runner = CliRunner()
-    result = runner.invoke(cli_main, ["naming", "init", "--template", "nexus-style"])
+    result = runner.invoke(cli_main, ["naming", "init", "--template", "hub-style"])
     assert result.exit_code == 0
     target = tmp_path / ".vigil-naming.toml"
     assert target.is_file()
@@ -731,7 +731,7 @@ def test_validate_reads_include_naming_from_config_toml(tmp_path: Path):
 def test_strict_prefix_with_empty_values_fails():
     """Strict mode + empty dictionary = always-FAIL. The validator does
     not synthesize a prefix; it asks the team to declare one."""
-    base = _nexus_like_convention()
+    base = _hub_like_convention()
     conv = NamingConvention(
         prefix=TokenSpec(values=(), strict=True),
         category=base.category,
@@ -754,7 +754,7 @@ def test_strict_prefix_with_empty_values_fails():
 def test_non_strict_prefix_with_empty_values_passes_through():
     """Non-strict + empty dictionary = no prefix check at all. This is
     the monorepo-only template's posture."""
-    base = _nexus_like_convention()
+    base = _hub_like_convention()
     conv = NamingConvention(
         prefix=TokenSpec(values=(), strict=False),
         category=base.category,

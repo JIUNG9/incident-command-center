@@ -328,7 +328,7 @@ unparseable frontmatter. See [`docs/VALIDATE.md`](docs/VALIDATE.md).
 Configure your team's repo / service naming via `.vigil-naming.toml`:
 
 ```bash
-vigil naming init --template nexus-style    # write starter config
+vigil naming init --template hub-style    # write starter config
 vigil naming check acme-infra-core-billing-tfmod
 vigil validate --include-naming             # check brain dirs against the rules
 ```

@@ -1,4 +1,4 @@
-# nexus-style.toml — faithful to the structural pattern.
+# hub-style.toml — faithful to the structural pattern.
 #
 # Pattern: {prefix}-{category}-{domain}-{service}[-{submodule}]-{type}
 # 5..6 tokens. Domain codes are short; services live in a controlled

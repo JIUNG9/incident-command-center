@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { useAIStore, type AIMode, type ParoMode } from "@/lib/stores/ai-store"
+import { useAIStore, type AIMode, type VigilMode } from "@/lib/stores/ai-store"
 import { AIChatMessage } from "@/components/ai/ai-chat-message"
 import { SystemSummary } from "@/components/ai/system-summary"
 
@@ -22,8 +22,8 @@ export function AIAssistantPanel() {
     sendMessage,
     aiMode,
     setAIMode,
-    paroMode,
-    setParoMode,
+    vigilMode,
+    setVigilMode,
   } = useAIStore()
 
   const [input, setInput] = React.useState("")
@@ -124,7 +124,7 @@ export function AIAssistantPanel() {
           </Button>
         </div>
 
-        {/* acme-deploy retrieval mode (v1 dense / v6 hybrid+rerank) */}
+        {/* vigil retrieval mode (v1 dense / v6 hybrid+rerank) */}
         <div className="shrink-0 border-b border-border/30 px-4 py-2">
           <div className="flex items-center gap-2">
             <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
@@ -133,17 +133,17 @@ export function AIAssistantPanel() {
             <div className="flex items-center gap-0.5 rounded-md bg-muted/40 p-0.5">
               {(
                 [
-                  { mode: "v1" as ParoMode, label: "v1 (dense)" },
-                  { mode: "v6" as ParoMode, label: "v6 (hybrid + rerank)" },
+                  { mode: "v1" as VigilMode, label: "v1 (dense)" },
+                  { mode: "v6" as VigilMode, label: "v6 (hybrid + rerank)" },
                 ] as const
               ).map(({ mode, label }) => (
                 <button
                   key={mode}
                   type="button"
-                  onClick={() => setParoMode(mode)}
+                  onClick={() => setVigilMode(mode)}
                   className={cn(
                     "rounded px-2 py-0.5 font-mono text-[10px] transition-colors",
-                    paroMode === mode
+                    vigilMode === mode
                       ? "bg-primary text-background"
                       : "text-muted-foreground hover:text-foreground",
                   )}

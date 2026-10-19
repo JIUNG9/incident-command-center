@@ -15,9 +15,9 @@ import {
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { type ChatMessage, type ToolCall, type ToolCallStatus } from "@/lib/mock-data/ai-chat"
-import { type ParoChatMessage, useAIStore } from "@/lib/stores/ai-store"
-import { ConfidenceBadge } from "@/components/acme-deploy/confidence-badge"
-import { SourceList } from "@/components/acme-deploy/source-list"
+import { type VigilChatMessage, useAIStore } from "@/lib/stores/ai-store"
+import { ConfidenceBadge } from "@/components/vigil/confidence-badge"
+import { SourceList } from "@/components/vigil/source-list"
 
 // ---- Relative time helper ----
 
@@ -184,9 +184,9 @@ function renderContent(content: string) {
 
 // ---- Main message component ----
 
-export function AIChatMessage({ message }: { message: ChatMessage | ParoChatMessage }) {
+export function AIChatMessage({ message }: { message: ChatMessage | VigilChatMessage }) {
   const isUser = message.role === "user"
-  const acme-deploy = (message as ParoChatMessage).acme-deploy
+  const vigil = (message as VigilChatMessage).vigil
   const vote = useAIStore((s) => s.vote)
 
   return (
@@ -233,31 +233,31 @@ export function AIChatMessage({ message }: { message: ChatMessage | ParoChatMess
             </div>
           )}
 
-          {/* acme-deploy metadata: latency, mode, confidence, vote */}
-          {!isUser && acme-deploy && (
+          {/* vigil metadata: latency, mode, confidence, vote */}
+          {!isUser && vigil && (
             <div className="mt-2 flex flex-wrap items-center gap-1.5 border-t border-border/40 pt-2">
               <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-                vigil · {acme-deploy.mode}
+                vigil · {vigil.mode}
               </span>
               <span className="font-mono text-[10px] text-primary/80">
-                {acme-deploy.latency_ms}ms
+                {vigil.latency_ms}ms
               </span>
-              {acme-deploy.confidence && (
+              {vigil.confidence && (
                 <>
-                  <ConfidenceBadge value={acme-deploy.confidence.overall} label="conf" />
+                  <ConfidenceBadge value={vigil.confidence.overall} label="conf" />
                 </>
               )}
               <div className="ml-auto flex items-center gap-0.5">
                 <button
                   type="button"
-                  onClick={() => vote(acme-deploy.query_id, "up")}
-                  disabled={!!acme-deploy.voted}
+                  onClick={() => vote(vigil.query_id, "up")}
+                  disabled={!!vigil.voted}
                   className={cn(
                     "rounded p-1 transition-colors",
-                    acme-deploy.voted === "up"
+                    vigil.voted === "up"
                       ? "text-emerald-400 bg-emerald-400/15"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                    acme-deploy.voted && acme-deploy.voted !== "up" && "opacity-30 cursor-not-allowed",
+                    vigil.voted && vigil.voted !== "up" && "opacity-30 cursor-not-allowed",
                   )}
                   aria-label="thumbs up"
                 >
@@ -265,14 +265,14 @@ export function AIChatMessage({ message }: { message: ChatMessage | ParoChatMess
                 </button>
                 <button
                   type="button"
-                  onClick={() => vote(acme-deploy.query_id, "down")}
-                  disabled={!!acme-deploy.voted}
+                  onClick={() => vote(vigil.query_id, "down")}
+                  disabled={!!vigil.voted}
                   className={cn(
                     "rounded p-1 transition-colors",
-                    acme-deploy.voted === "down"
+                    vigil.voted === "down"
                       ? "text-red-400 bg-red-400/15"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                    acme-deploy.voted && acme-deploy.voted !== "down" && "opacity-30 cursor-not-allowed",
+                    vigil.voted && vigil.voted !== "down" && "opacity-30 cursor-not-allowed",
                   )}
                   aria-label="thumbs down"
                 >
@@ -282,24 +282,24 @@ export function AIChatMessage({ message }: { message: ChatMessage | ParoChatMess
             </div>
           )}
 
-          {/* acme-deploy sources — top-k retrieved hits */}
-          {!isUser && acme-deploy && acme-deploy.hits.length > 0 && (
+          {/* vigil sources — top-k retrieved hits */}
+          {!isUser && vigil && vigil.hits.length > 0 && (
             <details className="mt-2">
               <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-wider text-muted-foreground hover:text-foreground">
-                sources {acme-deploy.hits.length} shown
+                sources {vigil.hits.length} shown
               </summary>
               <div className="mt-2">
-                <SourceList hits={acme-deploy.hits} />
+                <SourceList hits={vigil.hits} />
               </div>
             </details>
           )}
 
-          {/* acme-deploy per-layer confidence breakdown */}
-          {!isUser && acme-deploy?.confidence && (
+          {/* vigil per-layer confidence breakdown */}
+          {!isUser && vigil?.confidence && (
             <div className="mt-2 grid grid-cols-3 gap-1.5">
-              <ConfidenceBadge value={acme-deploy.confidence.retrieval} label="retrieve" />
-              <ConfidenceBadge value={acme-deploy.confidence.reranker} label="rerank" />
-              <ConfidenceBadge value={acme-deploy.confidence.llm} label="LLM" />
+              <ConfidenceBadge value={vigil.confidence.retrieval} label="retrieve" />
+              <ConfidenceBadge value={vigil.confidence.reranker} label="rerank" />
+              <ConfidenceBadge value={vigil.confidence.llm} label="LLM" />
             </div>
           )}
         </div>
