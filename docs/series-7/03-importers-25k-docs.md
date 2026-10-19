@@ -177,7 +177,7 @@ source: jira
 source_type: issue
 source_id: INFRA-2391
 source_url: https://your-org.atlassian.net/browse/INFRA-2391
-title: "dp-prod-rds storage autoscale ceiling hit"
+title: "prod-b-rds storage autoscale ceiling hit"
 fetched_at: 2026-05-13T07:11:49Z
 last_modified: 2026-05-13T06:42:00.000+0900
 author: "Alice Park"
@@ -189,7 +189,7 @@ extra:
   jira_assignee: "Min-jun Jo"
 ---
 
-# INFRA-2391 — dp-prod-rds storage autoscale ceiling hit
+# INFRA-2391 — prod-b-rds storage autoscale ceiling hit
 
 ## Description
 ...
@@ -275,10 +275,10 @@ Confluence CQL has two non-obvious quirks I discovered the hard way:
 
 ```python
 # This returns HTTP 400 "Could not parse cql":
-"space IN (DEVOPS, NEXUS, INFRA) AND lastmodified > '...'"
+"space IN (DEVOPS, PLATFORM, INFRA) AND lastmodified > '...'"
 
 # This works:
-"space IN (\"DEVOPS\",\"NEXUS\",\"INFRA\") AND lastmodified > '...'"
+"space IN (\"DEVOPS\",\"PLATFORM\",\"INFRA\") AND lastmodified > '...'"
 ```
 
 The error message gives you nothing useful — just `BadRequestException: Could not parse cql:`. The quotes are mandatory for multi-space `IN` clauses.
@@ -408,7 +408,7 @@ Each file is a markdown list of substantive messages from that channel that day:
 ```markdown
 # #devops — 2026-05-14
 
-- **09:23 · Alice Park**: heads up, we're rolling back PN-1834. RDS CPU was spiking.
+- **09:23 · Alice Park**: heads up, we're rolling back OPS-1834. RDS CPU was spiking.
 - **09:24 · Min-jun Jo**: ack. I'll monitor replica lag.
 - **09:31 · Alice Park**: replica lag back to <100ms. resolved.
 ```

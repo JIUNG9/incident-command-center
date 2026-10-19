@@ -16,8 +16,8 @@
 
   <!-- Internal column header -->
   <rect x="960" y="120" width="380" height="60" fill="#2b6cb0" rx="6"/>
-  <text x="1150" y="155" text-anchor="middle" font-size="22" font-weight="700" fill="#fafafa">paro — internal</text>
-  <text x="1150" y="175" text-anchor="middle" font-size="13" fill="#fafafa" opacity="0.85">placen / fnb cluster</text>
+  <text x="1150" y="155" text-anchor="middle" font-size="22" font-weight="700" fill="#fafafa">Internal build</text>
+  <text x="1150" y="175" text-anchor="middle" font-size="13" fill="#fafafa" opacity="0.85">private EKS cluster</text>
 
   <!-- OSS column items -->
   <g font-size="15" fill="#1a1a1a">
@@ -58,19 +58,19 @@
   <!-- Internal column items -->
   <g font-size="15" fill="#1a1a1a">
     <rect x="960" y="210" width="380" height="55" fill="#ffffff" stroke="#2b6cb0" stroke-width="1.5" rx="4"/>
-    <text x="1150" y="244" text-anchor="middle">K8s namespace · paro-agent</text>
+    <text x="1150" y="244" text-anchor="middle">K8s namespace · chat-agent</text>
 
     <rect x="960" y="280" width="380" height="55" fill="#ffffff" stroke="#2b6cb0" stroke-width="1.5" rx="4"/>
-    <text x="1150" y="314" text-anchor="middle">ECR · pn-nx-apne2-prod-paro-{api,web}</text>
+    <text x="1150" y="314" text-anchor="middle">ECR · acme-hub-apne2-prod-chat-{api,web}</text>
 
     <rect x="960" y="350" width="380" height="55" fill="#ffffff" stroke="#2b6cb0" stroke-width="1.5" rx="4"/>
-    <text x="1150" y="384" text-anchor="middle">AWS SM · /pn/nx/paro/prod/credentials</text>
+    <text x="1150" y="384" text-anchor="middle">AWS SM · /acme/hub/chat/prod/credentials</text>
 
     <rect x="960" y="420" width="380" height="55" fill="#ffffff" stroke="#2b6cb0" stroke-width="1.5" rx="4"/>
-    <text x="1150" y="454" text-anchor="middle">ArgoCD app · paro-nexus-prod</text>
+    <text x="1150" y="454" text-anchor="middle">ArgoCD app · chat-hub-prod</text>
 
     <rect x="960" y="490" width="380" height="55" fill="#ffffff" stroke="#2b6cb0" stroke-width="1.5" rx="4"/>
-    <text x="1150" y="524" text-anchor="middle">DNS · chat.paro.placen.net</text>
+    <text x="1150" y="524" text-anchor="middle">DNS · chat.example.com</text>
   </g>
 
   <!-- Connector arrows -->
