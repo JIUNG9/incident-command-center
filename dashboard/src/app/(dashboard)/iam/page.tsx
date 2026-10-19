@@ -111,12 +111,12 @@ function RolesOverviewTab({ accountFilter }: { accountFilter: string | null }) {
     ? mockIAMRoles.filter(
         (r) =>
           r.account ===
-          (accountFilter === "nx"
-            ? "nexus"
-            : accountFilter === "nw"
-              ? "nowwaiting"
-              : accountFilter === "dp"
-                ? "dodopoint"
+          (accountFilter === "hub"
+            ? "hub"
+            : accountFilter === "prod-a"
+              ? "prod-a"
+              : accountFilter === "prod-b"
+                ? "prod-b"
                 : accountFilter)
       )
     : mockIAMRoles
@@ -277,12 +277,12 @@ function LeastPrivilegeTab({
     ? mockLeastPrivilegeRecommendations.filter(
         (r) =>
           r.account ===
-          (accountFilter === "nx"
-            ? "nexus"
-            : accountFilter === "nw"
-              ? "nowwaiting"
-              : accountFilter === "dp"
-                ? "dodopoint"
+          (accountFilter === "hub"
+            ? "hub"
+            : accountFilter === "prod-a"
+              ? "prod-a"
+              : accountFilter === "prod-b"
+                ? "prod-b"
                 : accountFilter)
       )
     : mockLeastPrivilegeRecommendations
@@ -443,12 +443,12 @@ function CloudTrailTab({ accountFilter }: { accountFilter: string | null }) {
     ? mockCloudTrailEvents.filter(
         (e) =>
           e.account ===
-          (accountFilter === "nx"
-            ? "nexus"
-            : accountFilter === "nw"
-              ? "nowwaiting"
-              : accountFilter === "dp"
-                ? "dodopoint"
+          (accountFilter === "hub"
+            ? "hub"
+            : accountFilter === "prod-a"
+              ? "prod-a"
+              : accountFilter === "prod-b"
+                ? "prod-b"
                 : accountFilter)
       )
     : mockCloudTrailEvents
@@ -623,12 +623,12 @@ function AccessMatrixTab({
     ? mockAccessMatrix.filter(
         (m) =>
           m.account ===
-          (accountFilter === "nx"
-            ? "nexus"
-            : accountFilter === "nw"
-              ? "nowwaiting"
-              : accountFilter === "dp"
-                ? "dodopoint"
+          (accountFilter === "hub"
+            ? "hub"
+            : accountFilter === "prod-a"
+              ? "prod-a"
+              : accountFilter === "prod-b"
+                ? "prod-b"
                 : accountFilter)
       )
     : mockAccessMatrix

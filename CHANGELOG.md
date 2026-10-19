@@ -49,8 +49,8 @@
 - Docs sweep: README, ARCHITECTURE, all `docs/*.md`, Medium articles updated
 - Preserved (interface compatibility): `TEAMMATE_*` env var names, internal
   module imports in deployed image consumers
-- Internal (placen/fnb) deployment keeps a distinct name `paro` for K8s, AWS,
-  and engineer-facing DNS; OSS users see only `vigil`
+- Self-hosted deployments can run under their own name for K8s, AWS and
+  DNS; the OSS package, CLI and docs use only `vigil`
 
 ### Added — community + release scaffolding
 - `CONTRIBUTING.md` — dev setup, commit conventions, PR checklist
@@ -304,10 +304,10 @@ The team-brain product that wins at 3 AM is the one willing to say "I don't know
 - **Configurable naming convention** — `.teammate-naming.toml` declares per-team vocabularies for prefix, category, domain, service, submodule, type. Pattern: `{prefix}-{category}-{domain}-{service}[-{submodule}]-{type}` with kebab-case charset, type-token-last, no-duplicate-tokens, length cap.
 - `teammate naming check <name>` — validate one name (or stdin batch with `-`). Exit 0 / 1 / 2.
 - `teammate naming list` — print effective convention.
-- `teammate naming init [--template ...] [--force]` — write a starter config. Templates: `nexus-style`, `small-team`, `monorepo-only`, `strict-iac`.
+- `teammate naming init [--template ...] [--force]` — write a starter config. Templates: `hub-style`, `small-team`, `monorepo-only`, `strict-iac`.
 - `teammate validate --include-naming` — integrates naming check into the existing shape report. Off by default; opt-in via flag or `[validate] include_naming = true` in main config.
 - Korean locale for validator messages — `[locale] language = "ko"` in the naming TOML. Faithful translations of the validator's failure-reason strings.
-- `examples/naming/{nexus-style,small-team,monorepo-only,strict-iac}.toml` — 4 starter configs.
+- `examples/naming/{hub-style,small-team,monorepo-only,strict-iac}.toml` — 4 starter configs.
 - `templates/team-brain-skeleton/.teammate-naming.toml` — bundled minimal default.
 - `docs/NAMING.md` — full spec, philosophy, migration guidance.
 - 30+ new tests; total now 300+.

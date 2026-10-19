@@ -1,4 +1,4 @@
-import type { SearchHit } from "@/lib/paro-api"
+import type { SearchHit } from "@/lib/vigil-api"
 import { ExternalLink } from "lucide-react"
 
 interface Props {

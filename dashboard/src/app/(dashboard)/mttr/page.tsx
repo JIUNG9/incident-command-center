@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { fetchMttr, type MttrBoxplot } from "@/lib/paro-api"
+import { fetchMttr, type MttrBoxplot } from "@/lib/vigil-api"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { AlertTriangle } from "lucide-react"
