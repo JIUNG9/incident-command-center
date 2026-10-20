@@ -3,6 +3,10 @@
 ## [Unreleased]
 
 ### Fixed
+- The root `.gitignore` rule `lib/` also ignored `dashboard/src/lib/`, so those modules never
+  reached git. Added a `!dashboard/src/lib/` exception and committed `utils.ts` (`cn`). The
+  mock-data modules, stores and API client under that folder are still missing, so
+  `npm run build` does not pass from a clean clone yet.
 - Incident state changes are now checked against a transition table (`ALLOWED_TRANSITIONS`).
   Before, `POST /incident/<id>/transition` would move any incident to any state, so a
   second `resolved` rewrote `resolved_at` and re-ran the postmortem drafter, and a
