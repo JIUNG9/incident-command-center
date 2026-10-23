@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added
+- `dashboard/src/lib/stores/account-store.ts`, rebuilt from its call sites: `useAccountStore`
+  (active account, account list), `SERVICE_TO_ACCOUNT`, `getServicesForAccount`,
+  `getAccountName`, and the `AccountProvider` type. It ships placeholder accounts
+  (`hub`, `prod-a`, `prod-b`). The `ai` and `setup` stores are still missing.
+
 ### Fixed
 - The root `.gitignore` rule `lib/` also ignored `dashboard/src/lib/`, so those modules never
   reached git. Added a `!dashboard/src/lib/` exception and committed `utils.ts` (`cn`). The
