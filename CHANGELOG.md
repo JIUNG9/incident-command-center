@@ -7,6 +7,11 @@
   (active account, account list), `SERVICE_TO_ACCOUNT`, `getServicesForAccount`,
   `getAccountName`, and the `AccountProvider` type. It ships placeholder accounts
   (`hub`, `prod-a`, `prod-b`). The `ai` and `setup` stores are still missing.
+- `dashboard/src/lib/vigil-api.ts`, rebuilt from its call sites: the six fetch functions the
+  war, MTTD, MTTR, timeline and watchlist pages import, their response types, and
+  `VigilApiError`. The base URL comes from `NEXT_PUBLIC_VIGIL_API_URL` (default
+  `http://localhost:8000`). Only `/war/incident` exists in the backend today; the `/apm/*`,
+  `/mttd/series`, `/mttr/boxplots` and `/timeline` paths are the ones the client expects.
 
 ### Fixed
 - The root `.gitignore` rule `lib/` also ignored `dashboard/src/lib/`, so those modules never
