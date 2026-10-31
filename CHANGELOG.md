@@ -3,6 +3,10 @@
 ## [Unreleased]
 
 ### Added
+- `dashboard/src/lib/mock-data/services.ts`, rebuilt from its call sites (slice 1 of the
+  mock-data rebuild): the `Service` and `ServiceStatus` types and 7 placeholder `SERVICES` whose
+  names match `SERVICE_TO_ACCOUNT`. The `slo`, `logs`, `saved-queries`, `oncall`, `security`,
+  `ai-chat`, `finops` and `incidents` modules are still missing, so `npm run build` still fails.
 - `dashboard/src/lib/stores/account-store.ts`, rebuilt from its call sites: `useAccountStore`
   (active account, account list), `SERVICE_TO_ACCOUNT`, `getServicesForAccount`,
   `getAccountName`, and the `AccountProvider` type. It ships placeholder accounts
