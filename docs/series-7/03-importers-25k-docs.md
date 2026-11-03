@@ -572,6 +572,8 @@ This is concurrency control via convergent retries — fine at this scale (4 imp
 
 After the first full backfill and 30 days of nightly runs:
 
+> **Self-reported from one internal deployment. Not reproducible from this repo.**
+
 | Source | Initial backfill | Time | Nightly delta |
 |---|---|---|---|
 | Jira | 16,259 issues | 14 min | 50-300 issues |

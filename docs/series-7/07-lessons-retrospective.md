@@ -158,6 +158,8 @@ Write the article first. Then implement.
 
 ## Numbers Across the Whole Project
 
+> **Self-reported from one internal deployment. Not reproducible from this repo.**
+
 | | Before | After |
 |---|---|---|
 | Avg MTTR for "have we seen this?" incidents | 47 min | 12 min |

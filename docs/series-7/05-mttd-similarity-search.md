@@ -178,6 +178,8 @@ I have not turned it on in production. The 0.92-confidence rule-based recommenda
 
 After 30 days of MTTD layer running:
 
+> **Self-reported from one internal deployment. Not reproducible from this repo.**
+
 | Metric | Before | After |
 |---|---|---|
 | Avg MTTD on high-severity incidents | 8 min 30 s | 2 min 14 s |
