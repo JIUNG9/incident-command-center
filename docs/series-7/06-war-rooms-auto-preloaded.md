@@ -233,6 +233,8 @@ The LLM is wrong often enough about root causes that auto-publishing would erode
 
 After 30 days running:
 
+> **Self-reported from one internal deployment. Not reproducible from this repo.**
+
 | Metric | Before | After |
 |---|---|---|
 | Median time to first action in an incident | 8 min | 2 min |

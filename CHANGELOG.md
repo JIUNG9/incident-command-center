@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Changed
+- Every production-metrics and cost table in `docs/ARCHITECTURE.md` and `docs/series-7/` now carries a label: measured figures are marked as self-reported from one internal deployment and not reproducible from this repo; cost figures are marked as estimates.
+
 ### Added
 - `dashboard/src/lib/mock-data/services.ts`, rebuilt from its call sites (slice 1 of the
   mock-data rebuild): the `Service` and `ServiceStatus` types and 7 placeholder `SERVICES` whose

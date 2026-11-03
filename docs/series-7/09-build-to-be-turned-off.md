@@ -80,6 +80,8 @@ The third criterion is the soft one. People say they'll use a tool and then don'
 
 ## The math, again
 
+> **Self-reported from one internal deployment. Not reproducible from this repo.**
+
 | State | $/month | What's running |
 |---|---|---|
 | Fully running | ~$200 | 11 pods + 2 ALBs + WAF + extra nodegroup node |

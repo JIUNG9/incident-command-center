@@ -389,6 +389,8 @@ The new pod starts, sees no active Socket Mode listener events to handle, eventu
 
 Numbers from the running system:
 
+> **Self-reported from one internal deployment. Not reproducible from this repo.**
+
 | Metric | Value |
 |---|---|
 | End-to-end latency (Slack send → Job created) | 800-1200 ms |
