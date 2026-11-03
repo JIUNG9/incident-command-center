@@ -155,6 +155,8 @@ auto MTTD       /war (engineer)     /war-report (CS / external)
 
 ## Operational cost (monthly, AWS ap-northeast-2)
 
+> **Estimates for one internal deployment (AWS list prices, not measured). Not reproducible from this repo.**
+
 | Component | Cost |
 |---|---|
 | Ollama node (t3.large, already running) | ~$65 |
@@ -174,6 +176,8 @@ auto MTTD       /war (engineer)     /war-report (CS / external)
 ---
 
 ## Before → after (Δ vs v0.10 baseline)
+
+> **Self-reported from one internal deployment. Not reproducible from this repo.**
 
 | Metric | Before | After | Δ |
 |---|---|---|---|

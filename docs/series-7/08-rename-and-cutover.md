@@ -96,6 +96,8 @@ Three things, ranked by how surprised I was.
 
 This is the table most cutover writeups skip. I'll be specific.
 
+> **Self-reported from one internal deployment. Not reproducible from this repo.**
+
 | Surface | Run rate |
 |---|---|
 | Vigil OSS (GitHub repo, PyPI publish, GitHub Actions CI) | **$0/month** |

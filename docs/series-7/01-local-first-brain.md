@@ -268,6 +268,8 @@ Phase 1 (heuristic, default-on) catches direct numeric or named-entity contradic
 
 After ~3 months of running:
 
+> **Self-reported from one internal deployment. Not reproducible from this repo.**
+
 | Metric | Before | After |
 |---|---|---|
 | MTTR for "have we seen this?" incidents | 47 min | 12 min |

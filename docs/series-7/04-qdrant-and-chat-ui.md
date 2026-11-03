@@ -253,6 +253,8 @@ A `git pull` every 5 minutes, then a re-index. Idempotent re-index returns immed
 
 After 30 days running:
 
+> **Self-reported from one internal deployment. Not reproducible from this repo.**
+
 | Metric | Before (per-pod SQLite) | After (Qdrant) |
 |---|---|---|
 | Per-job index build time | 30-45 min | 0 (read from Qdrant) |
