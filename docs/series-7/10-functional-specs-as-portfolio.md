@@ -30,7 +30,7 @@ Three things, all related.
 
 The first is that I noticed I was making the same architectural decision over and over, in slightly different forms, every time I sat down with the tool. *Should account scoping be a query parameter or a path segment? Should DORA be its own tab or fold into Deployments? Should incident state machine be optimistic-locked or last-write-wins?* Each time I revisited the project after a few weeks away, I'd re-derive answers, sometimes the same as last time, sometimes not. The waste was real. A spec is a single place where the decision lives — and the decision is the part that survives even when the implementation changes.
 
-The second is that the spec is the part of the work that's portable to other people. The code is mine; I wrote it on a laptop in my home. The spec is a public artifact (well — internal-public; it lives on Confluence for the team to read). If I get hit by a bus, the spec is what enables someone else to pick up. If I want to hand off a piece of this to a teammate, the spec is the briefing. If I'm interviewed about this work — for a promotion, for a relocation, for an external role — the spec is what I show as proof that I think rigorously about the work, not just code furiously.
+The second is that the spec is the part of the work that's portable to other people. The code is mine; I wrote it on a laptop in my home. The spec is a public artifact (well — internal-public; it lives on Confluence for the team to read). If I get hit by a bus, the spec is what enables someone else to pick up. If I want to hand off a piece of this to a teammate, the spec is the briefing. If I'm interviewed about this work the spec is what I show as proof that I think rigorously about the work, not just code furiously.
 
 The third, and this is the one that surprised me: writing the spec changes what I build. Not because the spec is "what to build" — I know roughly what to build before I write it. It changes what I build because the act of writing the twelve sections (overview, scope, glossary, stakeholders, scenarios, functional requirements, data model, API/UI, non-functional, constraints, acceptance criteria, changelog) surfaces the assumptions I'd otherwise carry around in my head untested. The "constraints" section in particular is where you find out the design has a quiet problem. The "acceptance criteria" section is where you find out you don't know how you'd judge success.
 
@@ -66,6 +66,7 @@ A few things, mostly small.
 
 ## How this fits the portfolio
 
+The portfolio behind this work is partly code (Vigil on GitHub, with its installable PyPI package and its 482 passing tests), partly writing (this article series on Medium, the LinkedIn posts that go with it), and partly artifacts that prove the work — diffs, deploy logs, cost graphs, incident postmortems.
 
 Specs belong in the artifacts bucket. They're the part of engineering work that's most directly comparable across companies and roles, because every team writes some form of them. An interviewer who's reviewed dozens of resumes from SRE candidates is going to scan an impact log faster than they'll scan a code sample. The impact log says "I shipped this and it cost $1k/month less than the thing it replaced." The specs say "I think about engineering work in twelve dimensions, here are the dimensions, here's my reasoning."
 
