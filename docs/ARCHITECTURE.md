@@ -6,7 +6,7 @@ Vigil is an open-source DevSecOps command center for SRE teams. Two surfaces ove
 
 | Surface | What it does |
 |---|---|
-| **Web dashboard** | 6 tabs — **SLA / SLO / SLI / MTTD / MTTR / Extra** — for the team's collective view (oncall, severity dashboards, SLO burn rates, incident analysis workbench) |
+| **Incident API** | War-room state machine, MTTD rules, MTTR timeline and postmortem drafting for the team's collective view. The web dashboard was removed (it did not build) |
 | **Local sync agent** | Clones the brain repo to `~/.vigil/brain` on each engineer's laptop; their Claude Code reads it directly. No API call needed for everyday queries. |
 
 Plus the supporting modes that span both surfaces:
@@ -19,8 +19,8 @@ The brain itself lives in **a private git repo**. Every change is PR-reviewable 
 ### What changed v4 → v5 (the rename)
 
 - **v4 was *teammate*** with a chat-centered "browse" mode.
-- **v5 is *Vigil*** — the chat tab is gone. The brain is still there. Engineers' local Claude reads it directly via the sync agent; the dashboard is for collective views (SLA/SLO/SLI dashboards, the MTTD watchlist console, the MTTR workbench).
-- Sync interval moved from hourly → 3-hourly (with a `Sync now` button in the dashboard).
+- **v5 is *Vigil*** — the chat tab is gone. The brain is still there. Engineers' local Claude reads it directly via the sync agent; the incident API serves the collective views.
+- Sync interval moved from hourly → 3-hourly.
 - War-rooms became an "analysis workbench" page; the in-app chat panel was cut because Slack already does that job.
 - MTTD became *automated by default* (action-first, ratify-after): adaptive baseline learner auto-applies SigNoz rules with revert.
 - New incident path: Slack message → right-click → "Import to Vigil" → LLM + system analysis → MTTR incident.

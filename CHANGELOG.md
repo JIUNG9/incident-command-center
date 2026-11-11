@@ -5,26 +5,13 @@
 ### Changed
 - Every production-metrics and cost table in `docs/ARCHITECTURE.md` and `docs/series-7/` now carries a label: measured figures are marked as self-reported from one internal deployment and not reproducible from this repo; cost figures are marked as estimates.
 
-### Added
-- `dashboard/src/lib/mock-data/services.ts`, rebuilt from its call sites (slice 1 of the
-  mock-data rebuild): the `Service` and `ServiceStatus` types and 7 placeholder `SERVICES` whose
-  names match `SERVICE_TO_ACCOUNT`. The `slo`, `logs`, `saved-queries`, `oncall`, `security`,
-  `ai-chat`, `finops` and `incidents` modules are still missing, so `npm run build` still fails.
-- `dashboard/src/lib/stores/account-store.ts`, rebuilt from its call sites: `useAccountStore`
-  (active account, account list), `SERVICE_TO_ACCOUNT`, `getServicesForAccount`,
-  `getAccountName`, and the `AccountProvider` type. It ships placeholder accounts
-  (`hub`, `prod-a`, `prod-b`). The `ai` and `setup` stores are still missing.
-- `dashboard/src/lib/vigil-api.ts`, rebuilt from its call sites: the six fetch functions the
-  war, MTTD, MTTR, timeline and watchlist pages import, their response types, and
-  `VigilApiError`. The base URL comes from `NEXT_PUBLIC_VIGIL_API_URL` (default
-  `http://localhost:8000`). Only `/war/incident` exists in the backend today; the `/apm/*`,
-  `/mttd/series`, `/mttr/boxplots` and `/timeline` paths are the ones the client expects.
+### Removed
+- The `dashboard/` Next.js app. It did not build: 33 imported modules were missing and 37 of its 114
+  files were mock data. The incident API and the CLI are the product. The README, `docs/ARCHITECTURE.md`
+  and `docs/llm-role-tiers.md` no longer describe a web dashboard, and the `dashboard` commit scope
+  and issue-template option are gone. The `!dashboard/src/lib/` `.gitignore` exception went with it.
 
 ### Fixed
-- The root `.gitignore` rule `lib/` also ignored `dashboard/src/lib/`, so those modules never
-  reached git. Added a `!dashboard/src/lib/` exception and committed `utils.ts` (`cn`). The
-  mock-data modules, stores and API client under that folder are still missing, so
-  `npm run build` does not pass from a clean clone yet.
 - Incident state changes are now checked against a transition table (`ALLOWED_TRANSITIONS`).
   Before, `POST /incident/<id>/transition` would move any incident to any state, so a
   second `resolved` rewrote `resolved_at` and re-ran the postmortem drafter, and a
