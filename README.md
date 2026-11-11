@@ -1,6 +1,6 @@
 # incident-command-center  *(formerly **Vigil**, formerly **teammate**)*
 
-> **A self-hosted AI incident command center.** Reliability ops, not chat. Six tabs over a git-backed corpus that auto-imports Jira / Confluence / GitHub / Slack. Engineers' Claude Code reads the brain locally; the dashboard is for the team's collective view. Private-VPC, no SaaS, no per-seat fee.
+> **A self-hosted AI incident command center.** Reliability ops, not chat. A git-backed corpus that auto-imports Jira / Confluence / GitHub / Slack, an incident API with a war-room state machine, and a postmortem drafter. Engineers' Claude Code reads the brain locally. Private-VPC, no SaaS, no per-seat fee.
 
 [![CI](https://github.com/JIUNG9/incident-command-center/actions/workflows/ci.yml/badge.svg)](https://github.com/JIUNG9/incident-command-center/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/vigil-devsecops.svg)](https://pypi.org/project/vigil-devsecops/)
@@ -34,8 +34,8 @@ A DevSecOps command center for teams that don't want to put their reliability da
 
 | Surface | What it does | Who uses it |
 |---|---|---|
-| **Web dashboard** | 6 tabs: SLA / SLO / SLI / MTTD / MTTR / Extra. Multi-account (e.g. `prod / shared / data / sandbox` pattern). Adaptive SigNoz watchlists, P0–P3 auto-classification with Slack ⇄ sync, incident analysis workbench with Slack-thread import. | The whole team, plus on-call |
-| **Local sync agent** | A 30-line shell script that clones your team brain repo to `~/.vigil/brain` and `git pull --rebase`s every 60 min. Your existing Claude Code session reads from there directly — no API call needed. | Every engineer on their laptop |
+| **Incident API** | War-room state machine, MTTD rules, MTTR timeline and postmortem drafting. The web dashboard that used to sit on top of it was removed because it did not build (see CHANGELOG). | The team and on-call, through the API and Slack |
+| **Local sync agent** | A 30-line shell script that clones your team brain repo to `~/.vigil/brain` and `git pull --rebase`s every 60 min. Your existing Claude Code session reads from there directly, no API call needed. | Every engineer on their laptop |
 
 ### Three layers, one source of truth
 
@@ -55,7 +55,7 @@ A DevSecOps command center for teams that don't want to put their reliability da
    │                              │   │                            │
    │  Qdrant + Ollama             │   │  ~/.vigil/brain (markdown) │
    │  Indexer (single writer)     │   │  Claude Code reads it      │
-   │  Dashboard backend           │   │  via ~/.claude/CLAUDE.md   │
+   │  Incident API                │   │  via ~/.claude/CLAUDE.md   │
    │  war-api (MTTR)              │   │  Optional: vigil-incident  │
    │  Postgres (incident state)   │   │   client-agent (off by     │
    │  SigNoz APM (existing)       │   │   default; opt-in per inc) │
@@ -68,7 +68,7 @@ Trust flows one way: Layer 2 → 1 → 0. A compromised laptop can poison one wa
 
 We had a chat panel in v4 (then named *teammate*). Engineers ignored it. They already had Claude Code open; context-switching to a browser tab for a *query* didn't add value. v5 cut the chat tab and re-allocated the engineer-facing surface:
 
-- **Collective views** (oncall, severity dashboards, SLO burn) → web dashboard
+- **Collective views** (oncall, severity, SLO burn) → the incident API
 - **Individual reasoning** (an engineer asking "what runbook covers this") → local Claude Code reading `~/.vigil/brain` directly
 
 The brain repo is the same in both. The surfaces are different.
@@ -654,30 +654,10 @@ vigil/
   docs/
     OSS_HYGIENE.md
     QUICKSTART.md
-  dashboard/                 ← Vigil web dashboard (Next.js 16, Tailwind, shadcn)
-    src/app/(dashboard)/     ← 17 pages: chat, timeline, watchlist, mttd, mttr, war,
-                                  logs, accounts, services, finops, slo, incidents,
-                                  security, iam, deployments, oncall, settings
-    src/components/          ← sidebar, command-bar, AI-assistant-panel, ui/...
-    src/messages/{en,ko}.json ← i18n via next-intl
-    package.json
   README.md
   pyproject.toml
   LICENSE
 ```
-
-### Running the dashboard locally
-
-```
-cd dashboard
-npm install
-npm run dev        # http://localhost:3000
-```
-
-The dashboard ships with English (`en`) as the default locale. Switch to Korean
-in the language picker (top right) — translations live in `src/messages/ko.json`.
-The default landing route is `/logs`; the setup wizard is pre-bypassed for OSS
-users (configure your real cloud accounts under `/accounts` instead).
 
 ---
 

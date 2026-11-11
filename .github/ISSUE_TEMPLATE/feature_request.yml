@@ -40,7 +40,6 @@ body:
       label: Which surface does this affect?
       multiple: true
       options:
-        - Web dashboard
         - CLI (vigil command)
         - Local sync agent (vigil-sync)
         - RAG / search pipeline

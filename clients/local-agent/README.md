@@ -65,4 +65,4 @@ This catches the "I left Claude Code running for hours" case where SessionStart-
 | Chat UI → backend → vector search → LLM | If any layer is down: no answer | 1–5s per query (network + LLM) |
 | **Local Claude Code → ~/.vigil/brain** | If git pull failed: stale (still works) | ~0 (local file read) |
 
-Single-source-of-truth (the brain repo) + zero-service-dependency (Claude Code reads files) = engineer's tool keeps working even if the dashboard is down.
+Single-source-of-truth (the brain repo) + zero-service-dependency (Claude Code reads files) = engineer's tool keeps working even if the incident API is down.

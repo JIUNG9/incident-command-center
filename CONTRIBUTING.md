@@ -60,7 +60,7 @@ docs(readme): clarify Ollama install steps
 chore(deps): bump httpx to 0.27.2
 ```
 
-Scopes we use today: `rag`, `indexer`, `dashboard`, `cli`, `mcp`, `slack`, `webhook`, `deps`, `ci`, `docs`, `readme`.
+Scopes we use today: `rag`, `indexer`, `cli`, `mcp`, `slack`, `webhook`, `deps`, `ci`, `docs`, `readme`.
 
 ## Pull request checklist
 
@@ -86,7 +86,7 @@ Maintainers cut releases — contributors should not push tags.
 
 To keep the surface small and the architecture stable:
 
-- New chat tabs in the dashboard. v5 deliberately removed the chat tab; engineer-facing reasoning happens in the user's local Claude Code reading `~/.vigil/brain` directly.
+- A chat UI. v5 deliberately removed the chat tab; engineer-facing reasoning happens in the user's local Claude Code reading `~/.vigil/brain` directly.
 - Cloud-only features (telemetry to external services, hosted SaaS modes). Vigil is local-first; the only outbound calls are to your own Ollama and Qdrant.
 - Per-seat license enforcement.
 - New paid storage backends. SQLite + Qdrant + git-backed markdown is the architecture.

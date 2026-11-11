@@ -78,7 +78,7 @@ local-sync agent instead: the team brain is cloned to the engineer's
 laptop as plain markdown files, and the engineer's existing local
 tooling reads it directly. No service to be up, no tab to open, no
 round-trip to a website. The collective views (severity dashboards, SLO
-burn, on-call) live in the web dashboard; individual reasoning happens in
+burn, on-call) live in the incident API; individual reasoning happens in
 the tools the engineer already has open.
 
 ## Why prediction stays off
