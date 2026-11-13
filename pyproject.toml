@@ -93,7 +93,7 @@ dev = [
   "ruff>=0.6",
 ]
 all = [
-  "vigil[rag,listen,importers,chat-api,mttd,war,client-agent,dev]",
+  "vigil-devsecops[rag,listen,importers,chat-api,mttd,war,client-agent,dev]",
 ]
 
 [project.scripts]

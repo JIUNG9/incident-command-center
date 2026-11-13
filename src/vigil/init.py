@@ -15,6 +15,7 @@ Two distinct flows:
 from __future__ import annotations
 
 import os
+import sysconfig
 from pathlib import Path
 from typing import Any
 
@@ -54,11 +55,20 @@ def _fail(msg: str) -> dict[str, str]:
 
 
 def _bundled_template_dir() -> Path:
-    """Locate the team-brain skeleton bundled with the package."""
+    """Locate the team-brain skeleton bundled with the package.
+
+    A source checkout has it at ``<repo>/templates``. A wheel install puts it
+    under the interpreter's data path (``<prefix>/share/vigil``), per the
+    ``shared-data`` mapping in pyproject.toml.
+    """
     pkg_root = Path(__file__).resolve().parent.parent.parent
-    candidate = pkg_root / "templates" / "team-brain-skeleton"
-    if candidate.is_dir():
-        return candidate
+    candidates = (
+        pkg_root / "templates" / "team-brain-skeleton",
+        Path(sysconfig.get_path("data")) / "share" / "vigil" / "team-brain-skeleton",
+    )
+    for candidate in candidates:
+        if candidate.is_dir():
+            return candidate
     return Path(__file__).resolve().parent / "templates" / "team-brain-skeleton"
 
 
