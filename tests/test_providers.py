@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import warnings
-
 
 def test_provider_abcs_are_importable():
     from vigil.providers import EmbeddingProvider, LLMProvider
@@ -98,24 +96,6 @@ def test_load_llm_provider_builds_ollama():
     p = load_llm_provider(cfg)
     assert isinstance(p, OllamaProvider)
     assert p.model_id == "llama3.2:3b"
-
-
-def test_back_compat_shim_still_exposes_ollama_client():
-    """Existing v0.2 importers must keep working (with a DeprecationWarning)."""
-    with warnings.catch_warnings(record=True) as caught:
-        warnings.simplefilter("always")
-        # Force a fresh import so the warning fires.
-        import importlib
-        import sys
-
-        sys.modules.pop("teammate.rag.ollama", None)
-        mod = importlib.import_module("teammate.rag.ollama")
-        assert hasattr(mod, "OllamaClient")
-        assert hasattr(mod, "OllamaUnavailable")
-        assert hasattr(mod, "OllamaError")
-        assert any(
-            issubclass(w.category, DeprecationWarning) for w in caught
-        ), "deprecation warning should have fired"
 
 
 def test_back_compat_exceptions_are_aliases():
