@@ -6,12 +6,20 @@
 - Every production-metrics and cost table in `docs/ARCHITECTURE.md` and `docs/series-7/` now carries a label: measured figures are marked as self-reported from one internal deployment and not reproducible from this repo; cost figures are marked as estimates.
 
 ### Removed
+- The `teammate` back-compat import shim (`src/teammate/`) and its test. Nothing in the repo imported it.
+  Use `vigil.providers` for `OllamaClient`-style imports. The `TEAMMATE_*` environment variables are
+  unchanged in this release.
 - The `dashboard/` Next.js app. It did not build: 33 imported modules were missing and 37 of its 114
   files were mock data. The incident API and the CLI are the product. The README, `docs/ARCHITECTURE.md`
   and `docs/llm-role-tiers.md` no longer describe a web dashboard, and the `dashboard` commit scope
   and issue-template option are gone. The `!dashboard/src/lib/` `.gitignore` exception went with it.
 
 ### Fixed
+- The `all` extra in `pyproject.toml` pointed at `vigil[...]`, which pip resolves to an unrelated PyPI
+  project named `vigil`. It now points at `vigil-devsecops[...]`.
+- `vigil init` / `scaffold` could not find the team-brain skeleton in a non-editable install (the wheel
+  puts it under `<prefix>/share/vigil`, and the lookup only checked the source checkout). It now checks
+  both. Five tests in `tests/test_init.py` and `tests/test_providers.py` failed on a wheel install before.
 - Incident state changes are now checked against a transition table (`ALLOWED_TRANSITIONS`).
   Before, `POST /incident/<id>/transition` would move any incident to any state, so a
   second `resolved` rewrote `resolved_at` and re-ran the postmortem drafter, and a
