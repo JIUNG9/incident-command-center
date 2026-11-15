@@ -2,7 +2,7 @@
 
 Precedence (highest first):
 
-  1. Environment variables (``TEAMMATE_LLM_*`` / ``TEAMMATE_EMBEDDING_*``)
+  1. Environment variables (``VIGIL_LLM_*`` / ``VIGIL_EMBEDDING_*``; ``TEAMMATE_*`` is a deprecated fallback)
   2. Per-repo config: ``<brain_root>/.vigil/config.toml``
   3. Per-user config: ``~/.vigil/config.toml``
   4. Built-in defaults (Ollama on localhost:11434)
@@ -26,12 +26,12 @@ section, no nested tables, doesn't justify a dependency.
 
 from __future__ import annotations
 
-import os
 import tomllib
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from vigil.env import get as _vigil_env
 from vigil.rag import (
     DEFAULT_EMBEDDING_MODEL,
     DEFAULT_LLM_MODEL,
@@ -163,14 +163,14 @@ def _merge_toml(
 def _apply_env_overrides(
     llm: ProviderConfig, embedding: ProviderConfig
 ) -> tuple[ProviderConfig, ProviderConfig, bool]:
-    """Apply TEAMMATE_* env vars on top of (llm, embedding). Returns (llm, emb, changed)."""
+    """Apply VIGIL_* env vars (deprecated TEAMMATE_* still read) on top of (llm, embedding). Returns (llm, emb, changed)."""
     changed = False
 
     def _override(cfg: ProviderConfig, prefix: str) -> tuple[ProviderConfig, bool]:
-        provider = os.environ.get(f"{prefix}_PROVIDER")
-        model = os.environ.get(f"{prefix}_MODEL")
-        host = os.environ.get(f"{prefix}_HOST") or os.environ.get(f"{prefix}_BASE_URL")
-        api_key_env = os.environ.get(f"{prefix}_API_KEY_ENV")
+        provider = _vigil_env(f"{prefix}_PROVIDER")
+        model = _vigil_env(f"{prefix}_MODEL")
+        host = _vigil_env(f"{prefix}_HOST") or _vigil_env(f"{prefix}_BASE_URL")
+        api_key_env = _vigil_env(f"{prefix}_API_KEY_ENV")
         if not any((provider, model, host, api_key_env)):
             return cfg, False
         new_options = dict(cfg.options)
@@ -187,8 +187,8 @@ def _apply_env_overrides(
             True,
         )
 
-    new_llm, c1 = _override(llm, "TEAMMATE_LLM")
-    new_emb, c2 = _override(embedding, "TEAMMATE_EMBEDDING")
+    new_llm, c1 = _override(llm, "LLM")
+    new_emb, c2 = _override(embedding, "EMBEDDING")
     changed = c1 or c2
     return new_llm, new_emb, changed
 

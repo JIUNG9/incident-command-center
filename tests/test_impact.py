@@ -362,7 +362,7 @@ def test_cache_returns_independent_list(tmp_path: Path):
 def test_cli_emit_then_list(tmp_path: Path, monkeypatch):
     brain = tmp_path / "brain"
     brain.mkdir()
-    monkeypatch.setenv("TEAMMATE_BRAIN_ROOT", str(brain))
+    monkeypatch.setenv("VIGIL_BRAIN_ROOT", str(brain))
     inv_root = tmp_path / "inv"
 
     runner = CliRunner()
@@ -388,7 +388,7 @@ def test_cli_emit_then_list(tmp_path: Path, monkeypatch):
 def test_cli_emit_unknown_severity_errors(tmp_path: Path, monkeypatch):
     brain = tmp_path / "brain"
     brain.mkdir()
-    monkeypatch.setenv("TEAMMATE_BRAIN_ROOT", str(brain))
+    monkeypatch.setenv("VIGIL_BRAIN_ROOT", str(brain))
     runner = CliRunner()
     result = runner.invoke(cli_main, [
         "impact", "emit",
@@ -407,7 +407,7 @@ def test_cli_preview_blocks_with_exit_2(tmp_path: Path, monkeypatch):
     inv_root = tmp_path / "inv"
     emit(brain, "aws_vpc.shared", "detach", "critical",
          invalidations_root=inv_root)
-    monkeypatch.setenv("TEAMMATE_BRAIN_ROOT", str(brain))
+    monkeypatch.setenv("VIGIL_BRAIN_ROOT", str(brain))
 
     runner = CliRunner()
     result = runner.invoke(cli_main, [
@@ -423,7 +423,7 @@ def test_cli_preview_passes_with_exit_0(tmp_path: Path, monkeypatch):
     brain = tmp_path / "brain"
     _seed_brain(brain)
     inv_root = tmp_path / "inv"
-    monkeypatch.setenv("TEAMMATE_BRAIN_ROOT", str(brain))
+    monkeypatch.setenv("VIGIL_BRAIN_ROOT", str(brain))
 
     runner = CliRunner()
     result = runner.invoke(cli_main, [
@@ -439,7 +439,7 @@ def test_cli_preview_json_emits_valid_json(tmp_path: Path, monkeypatch):
     brain = tmp_path / "brain"
     _seed_brain(brain)
     inv_root = tmp_path / "inv"
-    monkeypatch.setenv("TEAMMATE_BRAIN_ROOT", str(brain))
+    monkeypatch.setenv("VIGIL_BRAIN_ROOT", str(brain))
     runner = CliRunner()
     result = runner.invoke(cli_main, [
         "impact", "preview",
@@ -460,7 +460,7 @@ def test_cli_list_with_severity_filter(tmp_path: Path, monkeypatch):
          invalidations_root=inv_root)
     emit(brain, "aws_iam_role.bot", "delete", "critical",
          invalidations_root=inv_root)
-    monkeypatch.setenv("TEAMMATE_BRAIN_ROOT", str(brain))
+    monkeypatch.setenv("VIGIL_BRAIN_ROOT", str(brain))
     runner = CliRunner()
     result = runner.invoke(cli_main, [
         "impact", "list",
@@ -481,7 +481,7 @@ def test_cli_list_invalid_duration_errors(tmp_path: Path, monkeypatch):
     # Create the repo so the missing-repo early-out doesn't mask the
     # duration parse error.
     emit(brain, "vpc-deadbeef", "modify", "low", invalidations_root=inv_root)
-    monkeypatch.setenv("TEAMMATE_BRAIN_ROOT", str(brain))
+    monkeypatch.setenv("VIGIL_BRAIN_ROOT", str(brain))
     runner = CliRunner()
     result = runner.invoke(cli_main, [
         "impact", "list",
@@ -495,7 +495,7 @@ def test_cli_list_no_repo_returns_zero(tmp_path: Path, monkeypatch):
     """Missing repo is normal on a fresh laptop — exit 0, no events."""
     brain = tmp_path / "brain"
     brain.mkdir()
-    monkeypatch.setenv("TEAMMATE_BRAIN_ROOT", str(brain))
+    monkeypatch.setenv("VIGIL_BRAIN_ROOT", str(brain))
     runner = CliRunner()
     result = runner.invoke(cli_main, [
         "impact", "list",

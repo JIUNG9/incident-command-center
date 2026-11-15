@@ -48,7 +48,7 @@ from typing import Any
 
 import yaml
 
-from vigil import __version__ as _TEAMMATE_VERSION
+from vigil import __version__ as _VIGIL_VERSION
 from vigil.providers.base import (
     EmbeddingProvider,
     ProviderError,
@@ -230,7 +230,7 @@ def _stamp_index(conn: sqlite3.Connection, embedder: EmbeddingProvider) -> None:
         "embedding_model": embedder.model_id,
         "embedding_dim": str(embedder.dim),
         "created_at": _dt.datetime.now(_dt.UTC).isoformat(timespec="seconds"),
-        "vigil_version": _TEAMMATE_VERSION,
+        "vigil_version": _VIGIL_VERSION,
     }
     _write_meta(conn, meta)
     conn.commit()

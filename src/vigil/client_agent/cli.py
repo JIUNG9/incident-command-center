@@ -2,7 +2,7 @@
 
 `join <incident_id>`:
   - Writes session hook config to ~/.claude/settings.json (PreToolUse + PostToolUse)
-  - Exports TEAMMATE_INCIDENT_ID and TEAMMATE_WAR_API_URL as shell vars
+  - Exports VIGIL_INCIDENT_ID and VIGIL_WAR_API_URL as shell vars
   - Adds the vigil MCP server to the Claude Code MCP config
   - Prints "✅ joined war-room <id>"
 
@@ -23,9 +23,10 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import sys
 from pathlib import Path
+
+from vigil.env import get as _vigil_env
 
 HOOK_NAME = "vigil-war-mirror"
 MCP_NAME = "vigil-war"
@@ -37,7 +38,7 @@ def main(argv: list[str] | None = None) -> int:
 
     join = sub.add_parser("join", help="join a war-room (activate hooks + MCP)")
     join.add_argument("incident_id")
-    join.add_argument("--war-api-url", default=os.environ.get("TEAMMATE_WAR_API_URL",
+    join.add_argument("--war-api-url", default=_vigil_env("WAR_API_URL",
                                                               "https://chat.vigil.your-domain.net"))
 
     sub.add_parser("leave", help="leave the war-room (deactivate hooks + MCP)")
@@ -80,16 +81,16 @@ def _cmd_join(incident_id: str, war_api_url: str) -> int:
         "command": "vigil-war-mcp",
         "args": [],
         "env": {
-            "TEAMMATE_INCIDENT_ID": incident_id,
-            "TEAMMATE_WAR_API_URL": war_api_url,
+            "VIGIL_INCIDENT_ID": incident_id,
+            "VIGIL_WAR_API_URL": war_api_url,
         },
     }
 
     _save_settings(settings_path, settings)
 
     # 3. Print shell snippet for env vars (caller `eval`s this)
-    print(f"export TEAMMATE_INCIDENT_ID={incident_id}")
-    print(f"export TEAMMATE_WAR_API_URL={war_api_url}")
+    print(f"export VIGIL_INCIDENT_ID={incident_id}")
+    print(f"export VIGIL_WAR_API_URL={war_api_url}")
     print(f"echo '✅ joined war-room {incident_id}'", file=sys.stderr)
     return 0
 
@@ -106,8 +107,9 @@ def _cmd_leave() -> int:
         del settings["mcpServers"][MCP_NAME]
 
     _save_settings(settings_path, settings)
-    print("unset TEAMMATE_INCIDENT_ID")
-    print("unset TEAMMATE_WAR_API_URL")
+    # Also unset the deprecated names, in case the shell joined under an older release.
+    print("unset VIGIL_INCIDENT_ID TEAMMATE_INCIDENT_ID")
+    print("unset VIGIL_WAR_API_URL TEAMMATE_WAR_API_URL")
     print("echo '👋 left war-room'", file=sys.stderr)
     return 0
 
@@ -121,7 +123,7 @@ def _cmd_status() -> int:
         for h in settings.get("hooks", {}).get(phase, [])
     )
     mcp_active = MCP_NAME in settings.get("mcpServers", {})
-    incident = os.environ.get("TEAMMATE_INCIDENT_ID", "(none)")
+    incident = _vigil_env("INCIDENT_ID", "(none)")
     print(f"Active incident: {incident}")
     print(f"Hooks installed: {'yes' if active else 'no'}")
     print(f"MCP server installed: {'yes' if mcp_active else 'no'}")

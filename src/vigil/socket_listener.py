@@ -11,8 +11,8 @@ Required env vars:
   SLACK_BOT_TOKEN          xoxb-... (Bot Token)
 
 Optional env vars:
-  TEAMMATE_SLACK_CHANNELS   comma-separated channel names to watch (default: all)
-  TEAMMATE_NAMESPACE        K8s namespace for Job creation (default: vigil-agent)
+  VIGIL_SLACK_CHANNELS   comma-separated channel names to watch (default: all)
+  VIGIL_NAMESPACE        K8s namespace for Job creation (default: vigil-agent)
   ATLASSIAN_API_TOKEN       enables Jira/Confluence polling if set
   ATLASSIAN_EMAIL           required for Atlassian Basic auth if polling enabled
   JIRA_BASE_URL             e.g. https://your-org.atlassian.net
@@ -40,6 +40,8 @@ import threading
 import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+
+from vigil.env import get as _vigil_env
 
 log = logging.getLogger(__name__)
 
@@ -90,7 +92,7 @@ def _create_k8s_job(routine: str, source: str = "slack-socket") -> str | None:
             log.error("cannot load kubeconfig: %s", exc)
             return None
 
-    namespace = os.environ.get("TEAMMATE_NAMESPACE", "vigil-agent")
+    namespace = _vigil_env("NAMESPACE", "vigil-agent")
     cronjob_name = f"vigil-{routine.replace('_', '-')}"
     job_name = f"{routine.replace('_', '-')}-{source}-{int(time.time())}"
 
@@ -161,7 +163,7 @@ def _watch_job_and_notify(
         except Exception:
             return
 
-    namespace = os.environ.get("TEAMMATE_NAMESPACE", "vigil-agent")
+    namespace = _vigil_env("NAMESPACE", "vigil-agent")
     batch = k8s_client.BatchV1Api()
 
     started = time.time()
@@ -360,7 +362,7 @@ def run(poll_interval: int = 60, fail_on_disconnect: bool = True) -> int:
 
     app_token = os.environ.get("SLACK_APP_TOKEN", "")   # xapp-...
     bot_token = os.environ.get("SLACK_BOT_TOKEN", "")   # xoxb-...
-    channels_raw = os.environ.get("TEAMMATE_SLACK_CHANNELS", "")
+    channels_raw = _vigil_env("SLACK_CHANNELS", "")
     watch_channels = [c.strip() for c in channels_raw.split(",") if c.strip()]
 
     if not app_token or not app_token.startswith("xapp-"):
@@ -399,7 +401,7 @@ def run(poll_interval: int = 60, fail_on_disconnect: bool = True) -> int:
     reconnect_attempts = 0
     initial_connect_announced = False
 
-    notify_channel = os.environ.get("TEAMMATE_LIFECYCLE_NOTIFY_CHANNEL", "")
+    notify_channel = _vigil_env("LIFECYCLE_NOTIFY_CHANNEL", "")
 
     def _notify_lifecycle(text: str) -> None:
         """Post a single connect/disconnect lifecycle line. Silent if no channel."""

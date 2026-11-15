@@ -25,7 +25,7 @@ from vigil.agent.base import FAIL, OK, WARN, RoutineConfig, RoutineResult
 # don't depend on the ``vigil`` script being on PATH inside whatever
 # runner ends up calling us. Tests patch this list to avoid the real
 # subprocess.
-_TEAMMATE_CMD: tuple[str, ...] = (sys.executable, "-m", "vigil.cli")
+_VIGIL_CMD: tuple[str, ...] = (sys.executable, "-m", "vigil.cli")
 
 _DIGEST_DELIMITER = "<!-- POST TO SLACK START -->"
 _DIGEST_DELIMITER_END = "<!-- POST TO SLACK END -->"
@@ -40,7 +40,7 @@ def _run_subcommand(args: list[str], cwd: Path, timeout: int = 60) -> tuple[int,
     """
     try:
         result = subprocess.run(
-            list(_TEAMMATE_CMD) + args,
+            list(_VIGIL_CMD) + args,
             cwd=str(cwd),
             capture_output=True,
             text=True,

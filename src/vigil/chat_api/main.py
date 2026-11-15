@@ -9,9 +9,9 @@ Env vars:
   OLLAMA_URL              default http://ollama:11434
   OLLAMA_LLM_MODEL        default llama3.2:3b
   OLLAMA_EMBED_MODEL      default nomic-embed-text
-  TEAMMATE_NAMESPACE      default vigil-agent
-  TEAMMATE_TOP_K          default 6
-  TEAMMATE_SCORE_FLOOR    default 0.5
+  VIGIL_NAMESPACE      default vigil-agent
+  VIGIL_TOP_K          default 6
+  VIGIL_SCORE_FLOOR    default 0.5
 """
 
 from __future__ import annotations
@@ -21,6 +21,8 @@ import logging
 import os
 import time
 from collections.abc import AsyncIterator
+
+from vigil.env import get as _vigil_env
 
 log = logging.getLogger(__name__)
 
@@ -48,9 +50,9 @@ COLLECTION = os.environ.get("QDRANT_COLLECTION", "brain")
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://ollama:11434")
 LLM_MODEL = os.environ.get("OLLAMA_LLM_MODEL", "llama3.2:3b")
 EMBED_MODEL = os.environ.get("OLLAMA_EMBED_MODEL", "nomic-embed-text")
-NAMESPACE = os.environ.get("TEAMMATE_NAMESPACE", "vigil-agent")
-TOP_K = int(os.environ.get("TEAMMATE_TOP_K", "6"))
-SCORE_FLOOR = float(os.environ.get("TEAMMATE_SCORE_FLOOR", "0.5"))
+NAMESPACE = _vigil_env("NAMESPACE", "vigil-agent")
+TOP_K = int(_vigil_env("TOP_K", "6"))
+SCORE_FLOOR = float(_vigil_env("SCORE_FLOOR", "0.5"))
 
 
 # ---------------------------------------------------------------------------
