@@ -89,7 +89,7 @@ def test_brain_pulse_json_empty_brain(tmp_path: Path, runner: CliRunner,
     """No brain / no invalidations / no drafts — must emit valid JSON."""
     brain = tmp_path / "brain"
     brain.mkdir()
-    monkeypatch.setenv("TEAMMATE_BRAIN_ROOT", str(brain))
+    monkeypatch.setenv("VIGIL_BRAIN_ROOT", str(brain))
     result = runner.invoke(
         cli_main,
         [
@@ -114,7 +114,7 @@ def test_brain_pulse_user_flag_overrides_git(tmp_path: Path, monkeypatch):
     inv_root = tmp_path / "brain-invalidations"
     _write_event(inv_root, resource_type="aws_vpc", resource_id="vpc-abc12345")
 
-    monkeypatch.setenv("TEAMMATE_BRAIN_ROOT", str(brain))
+    monkeypatch.setenv("VIGIL_BRAIN_ROOT", str(brain))
     runner = CliRunner()
     result = runner.invoke(
         cli_main,
@@ -137,7 +137,7 @@ def test_brain_pulse_json_includes_targeted(tmp_path: Path, monkeypatch):
     _write_event(inv_root, resource_type="aws_vpc",
                  resource_id="vpc-abc12345", severity="high")
 
-    monkeypatch.setenv("TEAMMATE_BRAIN_ROOT", str(brain))
+    monkeypatch.setenv("VIGIL_BRAIN_ROOT", str(brain))
     runner = CliRunner()
     result = runner.invoke(
         cli_main,
@@ -160,7 +160,7 @@ def test_brain_pulse_human_render_no_crash(tmp_path: Path, monkeypatch):
     _seed(brain)
     _git_init(brain, "alice@team", "alice")
 
-    monkeypatch.setenv("TEAMMATE_BRAIN_ROOT", str(brain))
+    monkeypatch.setenv("VIGIL_BRAIN_ROOT", str(brain))
     runner = CliRunner()
     result = runner.invoke(
         cli_main,
@@ -177,7 +177,7 @@ def test_brain_pulse_human_render_no_crash(tmp_path: Path, monkeypatch):
 def test_brain_pulse_invalid_since(tmp_path: Path, monkeypatch):
     brain = tmp_path / "brain"
     brain.mkdir()
-    monkeypatch.setenv("TEAMMATE_BRAIN_ROOT", str(brain))
+    monkeypatch.setenv("VIGIL_BRAIN_ROOT", str(brain))
     runner = CliRunner()
     result = runner.invoke(
         cli_main, ["brain-pulse", "--user", "alice@team", "--since", "1week"],
@@ -190,7 +190,7 @@ def test_brain_pulse_includes_brain_changes(tmp_path: Path, monkeypatch):
     brain = tmp_path / "brain"
     _seed(brain)
     _git_init(brain, "alice@team", "alice")
-    monkeypatch.setenv("TEAMMATE_BRAIN_ROOT", str(brain))
+    monkeypatch.setenv("VIGIL_BRAIN_ROOT", str(brain))
     runner = CliRunner()
     result = runner.invoke(
         cli_main,

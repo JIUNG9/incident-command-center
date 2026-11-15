@@ -31,6 +31,7 @@ def populated_brain(tmp_path: Path, template_dir: Path) -> Path:
 def _isolate_env(monkeypatch):
     """Strip teammate env vars so tests start with a known baseline."""
     for var in (
+        "VIGIL_BRAIN_ROOT",
         "TEAMMATE_BRAIN_ROOT",
         "TEAMMATE_FORCE_INIT",
         "TEAMMATE_OVERRIDE",

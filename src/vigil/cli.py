@@ -55,6 +55,7 @@ from vigil.config import (
     load_config,
     write_starter_config,
 )
+from vigil.env import get as _vigil_env
 from vigil.init import render_summary
 from vigil.init import run as run_init
 from vigil.init import scaffold as run_scaffold
@@ -381,7 +382,7 @@ def validate(as_json: bool, max_claude_md_kb: int, include_naming: bool) -> None
 
     Exit codes: 0 on all-PASS, 1 on any FAIL, 2 on only-WARN.
     """
-    brain_root = Path(os.environ.get("TEAMMATE_BRAIN_ROOT") or Path.cwd())
+    brain_root = Path(_vigil_env("BRAIN_ROOT") or Path.cwd())
     # The flag opts in. If absent, validate() falls back to the
     # `[validate] include_naming` setting in .vigil/config.toml.
     include_flag: bool | None = True if include_naming else None
@@ -748,7 +749,7 @@ def doctor(as_json: bool) -> None:
 
     Returns exit 0 (all PASS), 1 (any FAIL), or 2 (only WARNs).
     """
-    brain_root = Path(os.environ.get("TEAMMATE_BRAIN_ROOT") or Path.cwd())
+    brain_root = Path(_vigil_env("BRAIN_ROOT") or Path.cwd())
     checks, aggregate = _build_report(brain_root)
     if as_json:
         # Pure JSON — no rich, no ANSI. The smoke test pipes us into
@@ -793,7 +794,7 @@ def naming_check(name: str) -> None:
         validate_name,
     )
 
-    brain_root = Path(os.environ.get("TEAMMATE_BRAIN_ROOT") or Path.cwd())
+    brain_root = Path(_vigil_env("BRAIN_ROOT") or Path.cwd())
     cfg_path = _resolve_naming_config(brain_root)
     if cfg_path is None:
         click.echo(
@@ -839,7 +840,7 @@ def naming_list() -> None:
 
     from vigil.naming import load_naming_convention
 
-    brain_root = Path(os.environ.get("TEAMMATE_BRAIN_ROOT") or Path.cwd())
+    brain_root = Path(_vigil_env("BRAIN_ROOT") or Path.cwd())
     cfg_path = _resolve_naming_config(brain_root)
     if cfg_path is None:
         click.echo(
@@ -961,7 +962,7 @@ def agent_run(
     from vigil.agent.base import RoutineConfig
     from vigil.agent.runner import list_routines, run_routine
 
-    brain_root = Path(os.environ.get("TEAMMATE_BRAIN_ROOT") or Path.cwd())
+    brain_root = Path(_vigil_env("BRAIN_ROOT") or Path.cwd())
     if name not in list_routines():
         click.echo(
             f"unknown routine: {name!r}. Known: {', '.join(list_routines())}",
@@ -1011,7 +1012,7 @@ def agent_listen(poll_interval: int, fail_on_disconnect: bool) -> None:
 
     \b
     Optional env:
-      TEAMMATE_SLACK_CHANNELS   comma-separated channel names (default: all)
+      VIGIL_SLACK_CHANNELS   comma-separated channel names (default: all)
       ATLASSIAN_API_TOKEN       enables Jira/Confluence polling
       JIRA_BASE_URL             https://your-org.atlassian.net
       CONFLUENCE_BASE_URL       https://your-org.atlassian.net/wiki
@@ -1050,7 +1051,7 @@ def memory_import(
     """
     from vigil.memory_import import harvest_user_memory, write_plan
 
-    brain_root = Path(os.environ.get("TEAMMATE_BRAIN_ROOT") or Path.cwd())
+    brain_root = Path(_vigil_env("BRAIN_ROOT") or Path.cwd())
     if memory_root is None:
         # Default: assume the user has ~/.claude/. We don't try to walk
         # the project-id subdirs in v0.5 — the user passes the right
@@ -1146,7 +1147,7 @@ def adapter_show() -> None:
     """Print the effective adapter config. ``no adapter configured`` if absent."""
     from vigil.adapter import ADAPTER_FILENAME, load_adapter
 
-    brain_root = Path(os.environ.get("TEAMMATE_BRAIN_ROOT") or Path.cwd())
+    brain_root = Path(_vigil_env("BRAIN_ROOT") or Path.cwd())
     adapter_obj = load_adapter(brain_root)
     if adapter_obj is None:
         home_path = Path.home() / ADAPTER_FILENAME
@@ -1184,7 +1185,7 @@ def adapter_init(scope: str, force: bool) -> None:
     """Write a starter ``.vigil-adapter.toml`` based on detected layouts."""
     from vigil.adapter import ADAPTER_FILENAME, write_starter_adapter
 
-    brain_root = Path(os.environ.get("TEAMMATE_BRAIN_ROOT") or Path.cwd())
+    brain_root = Path(_vigil_env("BRAIN_ROOT") or Path.cwd())
     target = (
         Path.home() / ADAPTER_FILENAME
         if scope == "home"
@@ -1205,7 +1206,7 @@ def adapter_validate() -> None:
     """Check that every ``[paths]`` rule still matches real files."""
     from vigil.adapter import load_adapter, validate_adapter
 
-    brain_root = Path(os.environ.get("TEAMMATE_BRAIN_ROOT") or Path.cwd())
+    brain_root = Path(_vigil_env("BRAIN_ROOT") or Path.cwd())
     adapter_obj = load_adapter(brain_root)
     if adapter_obj is None:
         click.echo("no adapter configured — nothing to validate")
@@ -1242,7 +1243,7 @@ def audit(since: str | None, query_grep: str | None, limit: int, as_json: bool) 
 
     from vigil.confidence import read_audit
 
-    brain_root = Path(os.environ.get("TEAMMATE_BRAIN_ROOT") or Path.cwd())
+    brain_root = Path(_vigil_env("BRAIN_ROOT") or Path.cwd())
     cache_dir = brain_root / ".vigil-cache"
     if not cache_dir.exists():
         click.echo("no audit log yet — run `vigil ask` first", err=True)
@@ -1336,7 +1337,7 @@ def _run_sync(routine: str, out_dir: Path | None, dry_run: bool) -> None:
         click.echo(f"unknown sync routine: {routine!r}", err=True)
         sys.exit(2)
     name = _SYNC_ROUTINE_TO_NAME[routine]
-    brain_root = Path(os.environ.get("TEAMMATE_BRAIN_ROOT") or Path.cwd())
+    brain_root = Path(_vigil_env("BRAIN_ROOT") or Path.cwd())
     extra = _read_sync_section(brain_root, routine)
     target_dir = out_dir if out_dir is not None else _default_sync_out_dir(brain_root, routine)
 
@@ -1465,7 +1466,7 @@ def impact_preview(
 
     from vigil.impact import preview as run_preview
 
-    brain_root = Path(os.environ.get("TEAMMATE_BRAIN_ROOT") or Path.cwd())
+    brain_root = Path(_vigil_env("BRAIN_ROOT") or Path.cwd())
     report = run_preview(
         brain_root,
         list(resources),
@@ -1556,7 +1557,7 @@ def impact_emit(
     """Write an invalidation event to the brain-invalidations repo."""
     from vigil.impact import emit as run_emit
 
-    brain_root = Path(os.environ.get("TEAMMATE_BRAIN_ROOT") or Path.cwd())
+    brain_root = Path(_vigil_env("BRAIN_ROOT") or Path.cwd())
     try:
         path = run_emit(
             brain_root,
@@ -1596,7 +1597,7 @@ def impact_list(
         read_recent_invalidations,
     )
 
-    brain_root = Path(os.environ.get("TEAMMATE_BRAIN_ROOT") or Path.cwd())
+    brain_root = Path(_vigil_env("BRAIN_ROOT") or Path.cwd())
     root = _resolve_invalidations_root(brain_root, invalidations_root)
     if not root.exists():
         click.echo(
@@ -1679,7 +1680,7 @@ def brain_pulse(
     """
     from vigil.brain_pulse import collect, parse_duration
 
-    brain_root = Path(os.environ.get("TEAMMATE_BRAIN_ROOT") or Path.cwd())
+    brain_root = Path(_vigil_env("BRAIN_ROOT") or Path.cwd())
     try:
         since = parse_duration(since_str)
     except ValueError as exc:
@@ -1809,7 +1810,7 @@ def import_group() -> None:
 
 
 def _resolve_brain_root() -> Path:
-    return Path(os.environ.get("TEAMMATE_BRAIN_ROOT") or Path.cwd())
+    return Path(_vigil_env("BRAIN_ROOT") or Path.cwd())
 
 
 def _run_importer(importer_cls, dry_run: bool) -> None:

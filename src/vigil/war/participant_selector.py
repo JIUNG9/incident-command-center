@@ -17,6 +17,8 @@ import os
 import subprocess
 from datetime import UTC, datetime, timedelta
 
+from vigil.env import get as _vigil_env
+
 log = logging.getLogger(__name__)
 
 
@@ -75,7 +77,7 @@ def _slack_usergroup_members(group_handle: str) -> list[str]:
 
 def _codeowners_for(service: str) -> list[str]:
     """Parse CODEOWNERS files in brain repo for the given service."""
-    brain_root = os.environ.get("TEAMMATE_BRAIN_ROOT", ".")
+    brain_root = _vigil_env("BRAIN_ROOT", ".")
     candidates = [
         f"{brain_root}/CODEOWNERS",
         f"{brain_root}/.github/CODEOWNERS",
@@ -101,7 +103,7 @@ def _codeowners_for(service: str) -> list[str]:
 
 def _recent_committers(service: str, days: int = 14) -> list[str]:
     """Most-frequent committers to files matching `service` in the last `days` days."""
-    brain_root = os.environ.get("TEAMMATE_BRAIN_ROOT", ".")
+    brain_root = _vigil_env("BRAIN_ROOT", ".")
     since = (datetime.now(UTC) - timedelta(days=days)).strftime("%Y-%m-%d")
     try:
         out = subprocess.check_output(

@@ -12,10 +12,10 @@ Env vars:
   QDRANT_COLLECTION   default brain
   OLLAMA_URL          default http://ollama:11434
   OLLAMA_EMBED_MODEL  default nomic-embed-text
-  TEAMMATE_BRAIN_ROOT default cwd
-  TEAMMATE_INDEXED_DIRS comma-separated subdirs to index (default: archive,docs,knowledge)
-  TEAMMATE_CHUNK_SIZE default 800 chars
-  TEAMMATE_CHUNK_OVERLAP default 100 chars
+  VIGIL_BRAIN_ROOT default cwd
+  VIGIL_INDEXED_DIRS comma-separated subdirs to index (default: archive,docs,knowledge)
+  VIGIL_CHUNK_SIZE default 800 chars
+  VIGIL_CHUNK_OVERLAP default 100 chars
 """
 
 from __future__ import annotations
@@ -27,6 +27,8 @@ import time
 from collections.abc import Iterator
 from dataclasses import dataclass, field
 from pathlib import Path
+
+from vigil.env import get as _vigil_env
 
 log = logging.getLogger(__name__)
 
@@ -53,14 +55,14 @@ class Indexer:
     """Reads brain markdown, embeds, upserts to Qdrant."""
 
     def __init__(self, brain_root: Path | None = None):
-        self.brain_root = Path(brain_root or os.environ.get("TEAMMATE_BRAIN_ROOT") or Path.cwd())
+        self.brain_root = Path(brain_root or _vigil_env("BRAIN_ROOT") or Path.cwd())
         self.qdrant_url = os.environ.get("QDRANT_URL", "http://qdrant:6333")
         self.collection = os.environ.get("QDRANT_COLLECTION", "brain")
         self.ollama_url = os.environ.get("OLLAMA_URL", "http://ollama:11434")
         self.embed_model = os.environ.get("OLLAMA_EMBED_MODEL", "nomic-embed-text")
-        self.chunk_size = int(os.environ.get("TEAMMATE_CHUNK_SIZE", "800"))
-        self.chunk_overlap = int(os.environ.get("TEAMMATE_CHUNK_OVERLAP", "100"))
-        dirs_raw = os.environ.get("TEAMMATE_INDEXED_DIRS", "archive,docs,knowledge,decisions")
+        self.chunk_size = int(_vigil_env("CHUNK_SIZE", "800"))
+        self.chunk_overlap = int(_vigil_env("CHUNK_OVERLAP", "100"))
+        dirs_raw = _vigil_env("INDEXED_DIRS", "archive,docs,knowledge,decisions")
         self.indexed_dirs = [d.strip() for d in dirs_raw.split(",") if d.strip()]
 
     # ----- public API -----

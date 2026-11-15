@@ -20,6 +20,8 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
+from vigil.env import get as _vigil_env
+
 log = logging.getLogger(__name__)
 
 
@@ -38,7 +40,7 @@ class RuleLayer:
     """Watchlist YAML → alerting-backend rules."""
 
     def __init__(self, watchlist_dir: Path | None = None):
-        brain = os.environ.get("TEAMMATE_BRAIN_ROOT", ".")
+        brain = _vigil_env("BRAIN_ROOT", ".")
         self.dir = Path(watchlist_dir or f"{brain}/watchlist")
 
     def load_rules(self) -> list[WatchRule]:

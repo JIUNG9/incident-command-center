@@ -3,11 +3,11 @@
 What gets gathered (parallel):
 - Confluence pages updated in the last 24h across watched spaces (CONFLUENCE_WATCHER_SPACES)
 - Jira issues updated in the last 24h (JIRA_WATCHER_JQL with relative time)
-- Slack messages in watched channels (TEAMMATE_DIGEST_SLACK_CHANNELS)
+- Slack messages in watched channels (VIGIL_DIGEST_SLACK_CHANNELS)
 
 What gets published:
-- Slack: short summary posted to TEAMMATE_DIGEST_SLACK_CHANNEL (or TEAMMATE_SLACK_CHANNELS[0])
-- Confluence: full markdown digest written under TEAMMATE_DIGEST_PARENT_PAGE_ID
+- Slack: short summary posted to VIGIL_DIGEST_SLACK_CHANNEL (or VIGIL_SLACK_CHANNELS[0])
+- Confluence: full markdown digest written under VIGIL_DIGEST_PARENT_PAGE_ID
   - Rolling page: title "Daily Digest" (updated in place)
   - Archive child: title "Daily Digest — YYYY-MM-DD" (new each day)
 
@@ -20,10 +20,10 @@ Required env vars (set on the CronJob, not the dashboard):
   JIRA_BASE_URL, CONFLUENCE_BASE_URL            (default: <YOUR_DOMAIN>.atlassian.net)
   CONFLUENCE_WATCHER_SPACES                     comma-separated space keys to read from
   JIRA_WATCHER_JQL                              (optional) override JQL for digest
-  TEAMMATE_DIGEST_SPACE_ID                      target space numeric ID
-  TEAMMATE_DIGEST_PARENT_PAGE_ID                target parent (folder/page) ID
+  VIGIL_DIGEST_SPACE_ID                      target space numeric ID
+  VIGIL_DIGEST_PARENT_PAGE_ID                target parent (folder/page) ID
   SLACK_BOT_TOKEN                               for chat.postMessage
-  TEAMMATE_DIGEST_SLACK_CHANNEL                 channel name to post to
+  VIGIL_DIGEST_SLACK_CHANNEL                 channel name to post to
 """
 
 from __future__ import annotations
@@ -35,6 +35,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from vigil.agent.base import FAIL, OK, WARN, RoutineConfig, RoutineResult
+from vigil.env import get as _vigil_env
 
 log = logging.getLogger(__name__)
 
@@ -169,9 +170,7 @@ def _fetch_jira_issues(httpx) -> list[dict]:
 
 def _fetch_slack_messages() -> list[dict]:
     bot_token = os.environ.get("SLACK_BOT_TOKEN", "")
-    channels_raw = os.environ.get("TEAMMATE_DIGEST_SLACK_CHANNELS") or os.environ.get(
-        "TEAMMATE_SLACK_CHANNELS", ""
-    )
+    channels_raw = _vigil_env("DIGEST_SLACK_CHANNELS") or _vigil_env("SLACK_CHANNELS", "")
     channels = [c.strip() for c in channels_raw.split(",") if c.strip()]
     if not bot_token or not channels:
         return []
@@ -284,7 +283,7 @@ def _publish(today: str, markdown: str, httpx) -> str:
 
 def _publish_slack(today: str, markdown: str) -> str:
     bot_token = os.environ.get("SLACK_BOT_TOKEN", "")
-    channel = os.environ.get("TEAMMATE_DIGEST_SLACK_CHANNEL", "")
+    channel = _vigil_env("DIGEST_SLACK_CHANNEL", "")
     if not bot_token or not channel:
         return ""
 
@@ -312,10 +311,10 @@ def _publish_confluence(today: str, markdown: str, httpx) -> str:
     if not _has_atlassian_creds():
         return ""
 
-    space_id = os.environ.get("TEAMMATE_DIGEST_SPACE_ID", "")
-    parent_id = os.environ.get("TEAMMATE_DIGEST_PARENT_PAGE_ID", "")
+    space_id = _vigil_env("DIGEST_SPACE_ID", "")
+    parent_id = _vigil_env("DIGEST_PARENT_PAGE_ID", "")
     if not space_id or not parent_id:
-        return "Confluence skipped (no TEAMMATE_DIGEST_SPACE_ID / PARENT_PAGE_ID)."
+        return "Confluence skipped (no VIGIL_DIGEST_SPACE_ID / PARENT_PAGE_ID)."
 
     conf_url = os.environ.get("CONFLUENCE_BASE_URL", "")
     auth = _atlassian_auth()

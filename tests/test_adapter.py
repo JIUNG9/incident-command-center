@@ -298,7 +298,7 @@ def cli_env(monkeypatch, tmp_path):
     brain.mkdir()
     monkeypatch.setattr(Path, "home", lambda: home)
     monkeypatch.setenv("HOME", str(home))
-    monkeypatch.setenv("TEAMMATE_BRAIN_ROOT", str(brain))
+    monkeypatch.setenv("VIGIL_BRAIN_ROOT", str(brain))
     return home, brain
 
 

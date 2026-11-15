@@ -242,7 +242,7 @@ If you want Claude Code to be able to query the brain via MCP (recommended), add
       "command": "python",
       "args": ["-m", "teammate.mcp_server"],
       "env": {
-        "TEAMMATE_BRAIN_ROOT": "/Users/<you>/team-brain"
+        "VIGIL_BRAIN_ROOT": "/Users/<you>/team-brain"
       }
     }
   }
@@ -498,7 +498,7 @@ pip install 'vigil[listen]'
 # Set tokens once (see docs/SOCKET-MODE.md for Slack app setup)
 export SLACK_APP_TOKEN="xapp-..."
 export SLACK_BOT_TOKEN="xoxb-..."
-export TEAMMATE_SLACK_CHANNELS="ops-alerts"
+export VIGIL_SLACK_CHANNELS="ops-alerts"
 
 # Start listening (Ctrl-C to stop)
 vigil agent listen --no-fail-on-disconnect
@@ -607,15 +607,17 @@ even when the heuristic is confident an entry is team-relevant. See
 
 ## Configuration
 
+Settings that used to start with `TEAMMATE_` now start with `VIGIL_` (for example `VIGIL_BRAIN_ROOT`, `VIGIL_LLM_MODEL`, `VIGIL_TOP_K`). The old `TEAMMATE_` names still work for one more release and print a `DeprecationWarning`. When both are set, `VIGIL_` wins. `TEAMMATE_FORCE_INIT` and `TEAMMATE_OVERRIDE` are read by the shell hooks and keep their names for now.
+
 | Variable | Default | What it does |
 |---|---|---|
-| `TEAMMATE_BRAIN_ROOT` | `cwd` | Override the brain root (useful when running the MCP server from a fixed path). |
+| `VIGIL_BRAIN_ROOT` | `cwd` | Override the brain root (useful when running the MCP server from a fixed path). |
 | `TEAMMATE_FORCE_INIT` | `0` | Allow `init` to overwrite an existing pre-push hook. |
 | `TEAMMATE_OVERRIDE` | `0` | Bypass guardrail hooks for one push (use sparingly). |
 | `SLACK_APP_TOKEN` | — | `xapp-…` App-Level Token for Socket Mode. Required for `vigil agent listen`. |
 | `SLACK_BOT_TOKEN` | — | `xoxb-…` Bot Token. Required for `vigil agent listen`. |
-| `TEAMMATE_SLACK_CHANNELS` | all | Comma-separated channel names to watch. Empty = watch all channels. |
-| `TEAMMATE_NAMESPACE` | `vigil-agent` | K8s namespace for Job creation (event-listener Deployment). |
+| `VIGIL_SLACK_CHANNELS` | all | Comma-separated channel names to watch. Empty = watch all channels. |
+| `VIGIL_NAMESPACE` | `vigil-agent` | K8s namespace for Job creation (event-listener Deployment). |
 | `ATLASSIAN_API_TOKEN` | — | Enables Jira/Confluence polling in the event listener. |
 | `JIRA_BASE_URL` | — | e.g. `https://your-org.atlassian.net` |
 | `CONFLUENCE_BASE_URL` | — | e.g. `https://your-org.atlassian.net/wiki` |
