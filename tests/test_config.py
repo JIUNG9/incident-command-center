@@ -58,8 +58,8 @@ def test_env_vars_override_file(tmp_path: Path, monkeypatch):
         encoding="utf-8",
     )
 
-    monkeypatch.setenv("TEAMMATE_LLM_MODEL", "llama3.2:1b")
-    monkeypatch.setenv("TEAMMATE_LLM_HOST", "http://override:11434")
+    monkeypatch.setenv("VIGIL_LLM_MODEL", "llama3.2:1b")
+    monkeypatch.setenv("VIGIL_LLM_HOST", "http://override:11434")
 
     cfg = load_config(tmp_path)
     assert cfg.llm.model == "llama3.2:1b"

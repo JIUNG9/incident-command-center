@@ -24,13 +24,13 @@ tiny and avoids version drift.
 from __future__ import annotations
 
 import json
-import os
 import sys
 from pathlib import Path
 from typing import Any
 
 from vigil import __version__
 from vigil.config import load_config
+from vigil.env import get as _vigil_env
 from vigil.providers import load_embedding_provider
 from vigil.rag.ask import retrieve
 from vigil.rag.index import IndexVersionMismatch, open_index
@@ -43,7 +43,7 @@ PROTOCOL_VERSION = "2025-06-18"
 
 def _brain_root() -> Path:
     """Resolve the team brain root from env override or CWD."""
-    override = os.environ.get("TEAMMATE_BRAIN_ROOT")
+    override = _vigil_env("BRAIN_ROOT")
     if override:
         return Path(override).resolve()
     return Path.cwd().resolve()

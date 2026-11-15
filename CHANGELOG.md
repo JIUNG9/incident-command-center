@@ -3,12 +3,13 @@
 ## [Unreleased]
 
 ### Changed
+- Environment variables read by `src/` moved from `TEAMMATE_*` to `VIGIL_*` (`VIGIL_BRAIN_ROOT`, `VIGIL_LLM_*`, `VIGIL_EMBEDDING_*`, `VIGIL_SLACK_CHANNELS`, `VIGIL_NAMESPACE`, `VIGIL_TOP_K`, `VIGIL_SCORE_FLOOR`, `VIGIL_DIGEST_*`, `VIGIL_CHUNK_*`, `VIGIL_INDEXED_DIRS`, `VIGIL_INCIDENT_ID`, `VIGIL_WAR_API_URL`). The `TEAMMATE_*` names are still read as a deprecated fallback, emit a `DeprecationWarning`, and are removed in the next release. `VIGIL_*` wins when both are set. `vigil-client` now exports and writes `VIGIL_INCIDENT_ID` / `VIGIL_WAR_API_URL`; `leave` unsets both spellings. `TEAMMATE_OVERRIDE`, `TEAMMATE_FORCE_INIT` and `TEAMMATE_PROTECTED_BRANCHES` are read by the shell hooks and are unchanged here.
 - Every production-metrics and cost table in `docs/ARCHITECTURE.md` and `docs/series-7/` now carries a label: measured figures are marked as self-reported from one internal deployment and not reproducible from this repo; cost figures are marked as estimates.
 
 ### Removed
 - The `teammate` back-compat import shim (`src/teammate/`) and its test. Nothing in the repo imported it.
-  Use `vigil.providers` for `OllamaClient`-style imports. The `TEAMMATE_*` environment variables are
-  unchanged in this release.
+  Use `vigil.providers` for `OllamaClient`-style imports. The `TEAMMATE_*` environment variables were
+  unchanged in that release (see Changed above for the rename).
 - The `dashboard/` Next.js app. It did not build: 33 imported modules were missing and 37 of its 114
   files were mock data. The incident API and the CLI are the product. The README, `docs/ARCHITECTURE.md`
   and `docs/llm-role-tiers.md` no longer describe a web dashboard, and the `dashboard` commit scope
