@@ -22,7 +22,7 @@ Step-by-step instructions, written for Claude to read and follow:
 
 1. Verify the on-call engineer is in `#oncall-pager`.
 2. Run the pre-deploy checklist in `docs/runbooks/deploy.md`.
-3. Use `teammate ask "what changed in this service since last deploy?"` to surface
+3. Use `vigil ask "what changed in this service since last deploy?"` to surface
    the diff summary.
 4. Confirm the rollback plan is documented in the PR.
 
@@ -30,7 +30,7 @@ Step-by-step instructions, written for Claude to read and follow:
 
 ```bash
 # example invocation
-teammate ask "is the auth service safe to deploy right now?"
+vigil ask "is the auth service safe to deploy right now?"
 ```
 
 ## What this skill is NOT

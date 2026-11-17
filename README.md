@@ -240,7 +240,7 @@ If you want Claude Code to be able to query the brain via MCP (recommended), add
   "mcpServers": {
     "vigil-brain": {
       "command": "python",
-      "args": ["-m", "teammate.mcp_server"],
+      "args": ["-m", "vigil.mcp_server"],
       "env": {
         "VIGIL_BRAIN_ROOT": "/Users/<you>/team-brain"
       }
@@ -419,7 +419,7 @@ Phase 1 (heuristic) runs by default; Phase 2 (LLM judge) is opt-in via
 
 ### MCP integrations — Confluence, Jira, Slack, Web
 
-Sources of truth that aren't git stay where they are. Teammate syncs
+Sources of truth that aren't git stay where they are. Vigil syncs
 them into the brain on a slow loop, with PR review:
 
 ```bash
@@ -552,7 +552,7 @@ even when the heuristic is confident an entry is team-relevant. See
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│                          TEAMMATE PLUGIN                               │
+│                          VIGIL PLUGIN                                  │
 │                                                                        │
 │  ┌──────────────────────────────────────────────────────────────────┐  │
 │  │  Brain (read-only)                                               │  │
@@ -607,13 +607,12 @@ even when the heuristic is confident an entry is team-relevant. See
 
 ## Configuration
 
-Settings that used to start with `TEAMMATE_` now start with `VIGIL_` (for example `VIGIL_BRAIN_ROOT`, `VIGIL_LLM_MODEL`, `VIGIL_TOP_K`). The old `TEAMMATE_` names still work for one more release and print a `DeprecationWarning`. When both are set, `VIGIL_` wins. `TEAMMATE_FORCE_INIT` and `TEAMMATE_OVERRIDE` are read by the shell hooks and keep their names for now.
+Settings that used to start with `TEAMMATE_` now start with `VIGIL_` (for example `VIGIL_BRAIN_ROOT`, `VIGIL_LLM_MODEL`, `VIGIL_TOP_K`). The old `TEAMMATE_` names still work for one more release and print a `DeprecationWarning`. When both are set, `VIGIL_` wins. The shell hooks read `VIGIL_OVERRIDE` and `VIGIL_PROTECTED_BRANCHES` first and fall back to the `TEAMMATE_` names for the same release.
 
 | Variable | Default | What it does |
 |---|---|---|
 | `VIGIL_BRAIN_ROOT` | `cwd` | Override the brain root (useful when running the MCP server from a fixed path). |
-| `TEAMMATE_FORCE_INIT` | `0` | Allow `init` to overwrite an existing pre-push hook. |
-| `TEAMMATE_OVERRIDE` | `0` | Bypass guardrail hooks for one push (use sparingly). |
+| `VIGIL_OVERRIDE` | `0` | Bypass guardrail hooks for one push (use sparingly). |
 | `SLACK_APP_TOKEN` | — | `xapp-…` App-Level Token for Socket Mode. Required for `vigil agent listen`. |
 | `SLACK_BOT_TOKEN` | — | `xoxb-…` Bot Token. Required for `vigil agent listen`. |
 | `VIGIL_SLACK_CHANNELS` | all | Comma-separated channel names to watch. Empty = watch all channels. |

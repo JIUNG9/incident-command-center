@@ -1,4 +1,4 @@
-# .teammate-naming.toml — team-brain naming convention
+# .vigil-naming.toml — team-brain naming convention
 #
 # Pattern: {prefix}-{category}-{domain}-{service}[-{submodule}]-{type}
 #

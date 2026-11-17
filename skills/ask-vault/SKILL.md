@@ -25,7 +25,7 @@ laptop, no cloud.
 1. Indexes (or re-uses the existing index of) every `.md` file in the
    team-brain repo: `CLAUDE.md`, `.claude/skills/*/SKILL.md`,
    `.claude/rules/*.md`, `docs/**/*.md`, `knowledge/**/*.md`.
-   The index lives in `.teammate-cache/vault.sqlite` (sqlite-vec).
+   The index lives in `.vigil-cache/vault.sqlite` (sqlite-vec).
 
 2. Embeds the user's query via Ollama (`nomic-embed-text` by default) and
    runs cosine similarity against the indexed chunks.
@@ -46,10 +46,10 @@ laptop, no cloud.
 ## Run
 
 ```bash
-teammate ask "what's our deploy procedure?"
-teammate ask "who owns the auth service?"
-teammate ask --top-k 10 "summarize the ADRs from this quarter"
-teammate ask --rebuild "force a re-index, then answer"
+vigil ask "what's our deploy procedure?"
+vigil ask "who owns the auth service?"
+vigil ask --top-k 10 "summarize the ADRs from this quarter"
+vigil ask --rebuild "force a re-index, then answer"
 ```
 
 ## Output (Ollama running)

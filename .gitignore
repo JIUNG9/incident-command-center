@@ -43,7 +43,7 @@ env/
 htmlcov/
 
 # Local LLM artifacts (downloaded models, vector index caches)
-.teammate-cache/
+.vigil-cache/
 *.sqlite-vec
 
 # Compliance vault is per-team; never commit by default.
@@ -53,4 +53,4 @@ compliance-vault/
 # Local secrets / env
 .envrc
 *.local
-teammate-local.sh
+vigil-local.sh
