@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 #
-# teammate pre-push hook (v0.9). OPT-IN — installed via:
+# vigil pre-push hook (v0.9). OPT-IN — installed via:
 #
-#     teammate init --install-pre-push
+#     vigil init --install-pre-push
 #
 # (which copies this file to .git/hooks/pre-push and chmods +x).
 #
 # Behaviour:
-#   1. Run `teammate validate --include-naming` against the brain repo.
+#   1. Run `vigil validate --include-naming` against the brain repo.
 #      Hard fail (exit 1) on any FAIL — keeps the brain shape clean.
 #   2. Read the staged-but-unpushed diff from stdin (the git pre-push
 #      contract is "<local ref> <local sha> <remote ref> <remote sha>"
@@ -21,14 +21,14 @@
 
 set -euo pipefail
 
-if ! command -v teammate >/dev/null 2>&1; then
-  echo "pre-push: teammate CLI not on PATH — skipping" >&2
+if ! command -v vigil >/dev/null 2>&1; then
+  echo "pre-push: vigil CLI not on PATH — skipping" >&2
   exit 0
 fi
 
 # 1. Validate brain shape.
-if ! teammate validate --include-naming >/dev/null 2>&1; then
-  echo "pre-push: teammate validate failed. Run 'teammate validate' for details." >&2
+if ! vigil validate --include-naming >/dev/null 2>&1; then
+  echo "pre-push: vigil validate failed. Run 'vigil validate' for details." >&2
   exit 1
 fi
 
@@ -46,7 +46,7 @@ if [[ ${#local_shas[@]} -eq 0 ]]; then
 fi
 
 # Build the union diff for every commit being pushed; pull resource ids out.
-# Patterns mirror src/teammate/invalidations.py.
+# Patterns mirror src/vigil/invalidations.py.
 diff_text="$(git log --format='' -p "${local_shas[@]}" 2>/dev/null || true)"
 if [[ -z "$diff_text" ]]; then
   exit 0
@@ -63,9 +63,9 @@ while IFS= read -r r; do
   [[ -n "$r" ]] && args+=(--resource "$r")
 done <<<"$resources"
 
-if ! teammate impact preview "${args[@]}" --severity high --recency 24 >/dev/null 2>&1; then
+if ! vigil impact preview "${args[@]}" --severity high --recency 24 >/dev/null 2>&1; then
   echo "pre-push: WARNING — your push touches resources with recent HIGH-severity infra changes." >&2
-  echo "pre-push: run 'teammate impact preview ${args[*]}' for the full report." >&2
+  echo "pre-push: run 'vigil impact preview ${args[*]}' for the full report." >&2
   echo "pre-push: not blocking the push — proceeding." >&2
 fi
 

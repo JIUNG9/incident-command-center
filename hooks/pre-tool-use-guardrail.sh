@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# teammate Claude Code PreToolUse hook — blocks dangerous tool calls.
+# vigil Claude Code PreToolUse hook — blocks dangerous tool calls.
 #
 # Wired into Claude Code's hook system (.claude/settings.json). Reads the
 # tool invocation from stdin (JSON), decides allow/block, exits 0 (allow)
@@ -13,7 +13,8 @@
 #   3. `kubectl apply -f` against a prod context
 #   4. Edits to .github/workflows/*.yml on protected branches
 #
-# Override: set TEAMMATE_OVERRIDE=1 in shell env before launching Claude Code.
+# Override: set VIGIL_OVERRIDE=1 in shell env before launching Claude Code.
+# (the old TEAMMATE_OVERRIDE is still read for one more release)
 
 set -eu
 
@@ -32,7 +33,7 @@ if [ -z "$payload" ]; then
 fi
 
 # --- Override fast path ---
-if [ "${TEAMMATE_OVERRIDE:-0}" = "1" ]; then
+if [ "${VIGIL_OVERRIDE:-${TEAMMATE_OVERRIDE:-0}}" = "1" ]; then
   exit 0
 fi
 
@@ -94,12 +95,12 @@ fi
 
 if [ -n "$block_msg" ]; then
   cat <<EOF >&2
-teammate: BLOCKED — $block_msg
+vigil: BLOCKED — $block_msg
 
-This is the teammate PreToolUse guardrail. Defense in depth, not a
+This is the vigil PreToolUse guardrail. Defense in depth, not a
 replacement for branch protection or RBAC. Override:
 
-  TEAMMATE_OVERRIDE=1 <re-launch your shell or Claude Code session>
+  VIGIL_OVERRIDE=1 <re-launch your shell or Claude Code session>
 
 EOF
   exit 2

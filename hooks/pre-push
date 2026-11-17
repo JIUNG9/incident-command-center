@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 #
-# teammate pre-push hook — blocks direct push to protected branches.
+# vigil pre-push hook — blocks direct push to protected branches.
 #
-# Installed by `teammate init` into .git/hooks/pre-push. Raw bash by design —
+# Installed by `vigil init` into .git/hooks/pre-push. Raw bash by design —
 # no pre-commit framework dependency, no Python at hook time, no dependency
 # install required.
 #
-# Override mechanism: set TEAMMATE_OVERRIDE=1 in env. Example:
+# Override mechanism: set VIGIL_OVERRIDE=1 in env. Example:
+# (the old TEAMMATE_OVERRIDE is still read for one more release)
 #
-#   TEAMMATE_OVERRIDE=1 git push origin main
+#   VIGIL_OVERRIDE=1 git push origin main
 #
 # This is defense-in-depth, not a replacement for GitHub branch protection.
 # A determined user can `chmod -x .git/hooks/pre-push` or delete the hook
@@ -16,12 +17,12 @@
 
 set -eu
 
-# Configurable. Override by editing this file or setting TEAMMATE_PROTECTED_BRANCHES env.
+# Configurable. Override by editing this file or setting VIGIL_PROTECTED_BRANCHES env.
 PROTECTED_BRANCHES_DEFAULT="main master production prod release"
-PROTECTED_BRANCHES="${TEAMMATE_PROTECTED_BRANCHES:-$PROTECTED_BRANCHES_DEFAULT}"
+PROTECTED_BRANCHES="${VIGIL_PROTECTED_BRANCHES:-${TEAMMATE_PROTECTED_BRANCHES:-$PROTECTED_BRANCHES_DEFAULT}}"
 
-if [ "${TEAMMATE_OVERRIDE:-0}" = "1" ]; then
-  echo "teammate: TEAMMATE_OVERRIDE=1 set; allowing push." >&2
+if [ "${VIGIL_OVERRIDE:-${TEAMMATE_OVERRIDE:-0}}" = "1" ]; then
+  echo "vigil: VIGIL_OVERRIDE=1 set; allowing push." >&2
   exit 0
 fi
 
@@ -38,12 +39,12 @@ while read -r _local_ref _local_sha remote_ref _remote_sha; do
   for protected in $PROTECTED_BRANCHES; do
     if [ "$branch" = "$protected" ]; then
       cat <<EOF >&2
-teammate: BLOCKED — direct push to protected branch '$branch' on remote '$remote_name'.
+vigil: BLOCKED — direct push to protected branch '$branch' on remote '$remote_name'.
 
 The team's policy is to merge to '$branch' through a pull request. If this
 push is intentional, override with:
 
-  TEAMMATE_OVERRIDE=1 git push origin $branch
+  VIGIL_OVERRIDE=1 git push origin $branch
 
 Override is logged in the shell history. Use sparingly.
 EOF
@@ -65,14 +66,14 @@ if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     workflow_changes=$(git diff --name-only "$base"..HEAD 2>/dev/null | grep -E '^\.github/workflows/.*\.ya?ml$' || true)
     if [ -n "$workflow_changes" ]; then
       cat <<EOF >&2
-teammate: WARNING — this push touches CI/CD workflow files:
+vigil: WARNING — this push touches CI/CD workflow files:
 
 $workflow_changes
 
 CI/CD pipeline changes carry production blast radius. Make sure this push
 goes through code review. To proceed without warning:
 
-  TEAMMATE_OVERRIDE=1 git push ...
+  VIGIL_OVERRIDE=1 git push ...
 
 EOF
       # Warning, not block. The branch-protection check above handles the hard block.

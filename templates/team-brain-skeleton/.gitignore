@@ -1,6 +1,6 @@
-# teammate's local-only artifacts.
-.teammate-cache/
-.teammate-agent/
+# vigil's local-only artifacts.
+.vigil-cache/
+.vigil-agent/
 
 # v0.5: memory-import drafts. Default-skip safety bias means most teams
 # won't want these in PR review — they contain raw personal-memory

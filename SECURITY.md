@@ -19,6 +19,6 @@ in the first line.
 
 ## Threat model
 
-The signed compliance attestation PDFs produced by `teammate score --sign`
+The signed compliance attestation PDFs produced by `vigil score --sign`
 are designed to be auditable artifacts. The threat model and verification
 procedure are documented in [docs/SECURITY.md](docs/SECURITY.md).

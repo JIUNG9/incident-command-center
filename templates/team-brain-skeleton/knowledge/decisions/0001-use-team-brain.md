@@ -1,11 +1,11 @@
 ---
 adr_id: 0001
-title: Adopt teammate as the team's brain
+title: Adopt vigil as the team's brain
 status: accepted
 date: YYYY-MM-DD
 ---
 
-# ADR-0001: Adopt teammate as the team's brain
+# ADR-0001: Adopt vigil as the team's brain
 
 ## Context
 
@@ -16,7 +16,7 @@ because we need data residency / cost control / sovereignty / [pick your reason]
 
 ## Decision
 
-We adopt **teammate** as the team brain:
+We adopt **vigil** as the team brain:
 
 - This repository is the canonical source of truth for team knowledge.
 - Each engineer queries it locally via Claude Code + a local LLM (Ollama).
