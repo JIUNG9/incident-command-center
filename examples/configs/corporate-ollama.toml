@@ -1,4 +1,4 @@
-# teammate config — Ollama mirror inside a corporate VPN, reached via proxy/CA.
+# vigil config — Ollama mirror inside a corporate VPN, reached via proxy/CA.
 #
 # Use this when your company runs a shared Ollama on an internal box
 # (typically reachable only over VPN), egress goes through a corporate proxy,
@@ -21,7 +21,7 @@
 #                          `localhost,127.0.0.1,*.internal,*.your-team.local`
 #
 #   SSL_CERT_FILE        — path to your corporate CA bundle (PEM).
-#                          httpx (teammate's HTTP dep) honors this natively.
+#                          httpx (vigil's HTTP dep) honors this natively.
 #   REQUESTS_CA_BUNDLE   — same idea, used by `requests` and respected
 #                          as a fallback if SSL_CERT_FILE is not set.
 #   HTTPX_VERIFY         — explicit per-call override; rarely needed
@@ -29,9 +29,9 @@
 #
 # After exporting these, verify the model list resolves:
 #
-#   teammate doctor
+#   vigil doctor
 #
-# `teammate doctor` prints reachability + latency, model availability
+# `vigil doctor` prints reachability + latency, model availability
 # (`llama3.2:3b`, `nomic-embed-text` — pull them on the mirror first),
 # the effective proxy/CA env, and the index stamp. See `docs/CORPORATE.md`
 # for the full corporate-deployment guide.

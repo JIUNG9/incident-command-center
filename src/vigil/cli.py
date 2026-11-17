@@ -51,7 +51,7 @@ from vigil.adopt import adopt as run_adopt
 from vigil.brain import Brain
 from vigil.config import (
     ProviderConfig,
-    TeammateConfig,
+    VigilConfig,
     load_config,
     write_starter_config,
 )
@@ -238,7 +238,7 @@ def config() -> None:
 def config_show() -> None:
     """Print the effective provider config (env > repo > user > defaults)."""
     brain_root = Path.cwd()
-    cfg: TeammateConfig = load_config(brain_root)
+    cfg: VigilConfig = load_config(brain_root)
     click.echo(f"# config_source: {cfg.config_source}")
     click.echo(_render_provider_section("llm", cfg.llm))
     click.echo("")
@@ -521,7 +521,7 @@ def _check_provider_reachable(label: str, provider) -> dict[str, Any]:
     )
 
 
-def _check_models(cfg: TeammateConfig, llm, embedder) -> dict[str, Any]:
+def _check_models(cfg: VigilConfig, llm, embedder) -> dict[str, Any]:
     """Only meaningful for Ollama (the one provider with `list_models`).
 
     The ABCs don't define `list_models` — we duck-check it. For non-Ollama
@@ -560,7 +560,7 @@ def _check_models(cfg: TeammateConfig, llm, embedder) -> dict[str, Any]:
     )
 
 
-def _check_index(brain_root: Path, cfg: TeammateConfig, embedder) -> dict[str, Any]:
+def _check_index(brain_root: Path, cfg: VigilConfig, embedder) -> dict[str, Any]:
     """Read ``index_meta`` directly. Don't use ``open_index(embedder=...)`` —
     that would *raise* ``IndexVersionMismatch`` and abort the report. We
     want the mismatch as a soft WARN here, not a fatal exception.
@@ -1290,7 +1290,7 @@ _SYNC_ROUTINE_TO_NAME = {
 def _read_sync_section(brain_root: Path, name: str) -> dict[str, Any]:
     """Read ``[sync.<name>]`` from the repo's ``.vigil/config.toml``.
 
-    We don't go through ``TeammateConfig`` here — sync configs are
+    We don't go through ``VigilConfig`` here — sync configs are
     free-form (lists of dicts, allowlist arrays) and do not belong on
     the typed dataclass. Returning a plain dict keeps the change
     boundary inside cli.py.

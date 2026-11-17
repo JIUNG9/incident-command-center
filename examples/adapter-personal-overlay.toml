@@ -1,5 +1,5 @@
-# Example .teammate-adapter.toml — drop this in your home dir as
-# ~/.teammate-adapter.toml (or in the brain root for a team-shipped
+# Example .vigil-adapter.toml — drop this in your home dir as
+# ~/.vigil-adapter.toml (or in the brain root for a team-shipped
 # fallback). See docs/ADAPTER.md for the full schema.
 #
 # This file shows the two responsibilities the v0.6 adapter MVP supports:

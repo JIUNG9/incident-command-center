@@ -1,8 +1,8 @@
 {
-  "name": "teammate-chat-web",
+  "name": "vigil-chat-web",
   "version": "1.0.0",
   "private": true,
-  "description": "Standalone Next.js web app for chat.teammate.<your-domain>. Talks to teammate-chat-api over HTTP/SSE.",
+  "description": "Standalone Next.js web app for chat.vigil.<your-domain>. Talks to vigil-chat-api over HTTP/SSE.",
   "scripts": {
     "dev":   "next dev -p 3000",
     "build": "next build",

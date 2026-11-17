@@ -1,6 +1,6 @@
 # Ollama on EKS — example Terraform module (Phase B).
 #
-# Phase A in teammate is "every engineer runs Ollama on their laptop".
+# Phase A in vigil is "every engineer runs Ollama on their laptop".
 # Phase B is "the team runs one shared Ollama on EKS so a half-dozen
 # engineers don't each have to babysit a local model".
 #
@@ -45,7 +45,7 @@ terraform {
 locals {
   app_label = {
     "app.kubernetes.io/name"       = "ollama"
-    "app.kubernetes.io/managed-by" = "teammate-phase-b"
+    "app.kubernetes.io/managed-by" = "vigil-phase-b"
   }
 }
 

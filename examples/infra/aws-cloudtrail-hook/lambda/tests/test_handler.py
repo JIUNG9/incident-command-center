@@ -55,7 +55,7 @@ def _set_env(monkeypatch, **kw) -> None:
     monkeypatch.setenv("GITHUB_REPO", kw.get("repo", "your-org/brain-invalidations"))
     monkeypatch.setenv("GITHUB_BRANCH", kw.get("branch", "main"))
     monkeypatch.setenv("GITHUB_PAT_SSM_PARAMETER",
-                       kw.get("ssm", "/teammate/github_pat"))
+                       kw.get("ssm", "/vigil/github_pat"))
     if "slack" in kw:
         monkeypatch.setenv("SLACK_WEBHOOK_URL", kw["slack"])
     monkeypatch.setenv("SEVERITY_MAP_JSON", kw.get(

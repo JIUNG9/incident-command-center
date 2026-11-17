@@ -1,8 +1,8 @@
 {
-  "$schema_comment": "Sample config for an Anthropic-cloud /schedule runner (or any cron-driven runner) calling teammate agent routines. The runner reads this file, picks routines whose 'cron' fires now, runs `teammate agent run <name>`, and distributes the resulting markdown files to Slack / GitHub / wherever via its own scoped tokens.",
+  "$schema_comment": "Sample config for an Anthropic-cloud /schedule runner (or any cron-driven runner) calling vigil agent routines. The runner reads this file, picks routines whose 'cron' fires now, runs `vigil agent run <name>`, and distributes the resulting markdown files to Slack / GitHub / wherever via its own scoped tokens.",
   "version": 1,
   "brain_root": "/srv/team-brain",
-  "out_dir": "/srv/team-brain/.teammate-agent",
+  "out_dir": "/srv/team-brain/.vigil-agent",
   "routines": [
     {
       "name": "weekly_digest",
@@ -34,7 +34,7 @@
       "distribution": {
         "pr_comment": {
           "repo": "your-org/team-brain",
-          "marker": "<!-- teammate-agent: pr_migration_plan -->"
+          "marker": "<!-- vigil-agent: pr_migration_plan -->"
         }
       }
     }

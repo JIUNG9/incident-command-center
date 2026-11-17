@@ -83,7 +83,7 @@ class InvalidationsConfig:
 
 
 @dataclass(frozen=True)
-class TeammateConfig:
+class VigilConfig:
     """Effective config after precedence resolution."""
 
     llm: ProviderConfig
@@ -256,7 +256,7 @@ def _confidence_from_data(data: dict[str, Any]) -> ConfidenceConfig:
     return ConfidenceConfig(score_threshold=threshold, action_floors=floors)
 
 
-def load_config(brain_root: Path) -> TeammateConfig:
+def load_config(brain_root: Path) -> VigilConfig:
     """Resolve effective config for the given brain root.
 
     Reads (in order, last wins):
@@ -299,7 +299,7 @@ def load_config(brain_root: Path) -> TeammateConfig:
     if env_changed:
         source = "env" if source == "default" else "merged"
 
-    return TeammateConfig(
+    return VigilConfig(
         llm=llm,
         embedding=embedding,
         config_source=source,
@@ -374,7 +374,7 @@ __all__ = [
     "ContradictionConfig",
     "InvalidationsConfig",
     "ProviderConfig",
-    "TeammateConfig",
+    "VigilConfig",
     "load_config",
     "write_starter_config",
 ]

@@ -14,7 +14,7 @@ Environment::
 
   GITHUB_REPO              = "your-org/brain-invalidations"
   GITHUB_BRANCH            = "main"
-  GITHUB_PAT_SSM_PARAMETER = "/teammate/github_pat"
+  GITHUB_PAT_SSM_PARAMETER = "/vigil/github_pat"
   SLACK_WEBHOOK_URL        = ""  # optional; if set, a notice is posted
   SEVERITY_MAP_JSON        = '{"DetachVpcCidrBlock":"high", ...}'
   DEFAULT_SEVERITY         = "medium"
@@ -223,7 +223,7 @@ def _commit_to_github(
             "Authorization": f"Bearer {pat}",
             "Accept": "application/vnd.github+json",
             "Content-Type": "application/json",
-            "User-Agent": "teammate-cloudtrail-hook/0.9.0",
+            "User-Agent": "vigil-cloudtrail-hook/0.9.0",
         },
     )
     with urllib.request.urlopen(req, timeout=10) as resp:

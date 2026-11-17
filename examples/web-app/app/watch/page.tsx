@@ -5,7 +5,7 @@ export default function WatchPage() {
       <div className="font-semibold mb-2">Watch (MTTD)</div>
       <p className="text-zinc-600 mb-4">
         Watch-list YAML lives in your brain repo under <code>watchlist/*.yaml</code>.
-        Sync to SigNoz is performed by the <code>teammate-watchlist-sync</code> CronJob every 5 minutes.
+        Sync to SigNoz is performed by the <code>vigil-watchlist-sync</code> CronJob every 5 minutes.
       </p>
       <p className="text-zinc-600">
         Past-incident similarity search is available via the chat-api{" "}

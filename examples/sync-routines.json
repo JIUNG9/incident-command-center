@@ -1,5 +1,5 @@
 {
-  "$schema_comment": "Sample config for an Anthropic-cloud /schedule runner (or any cron-driven runner) calling teammate's v0.8 sync routines. The runner reads this file, picks routines whose 'cron' fires now, runs `teammate sync <name>`, and stages the resulting markdown files as a PR via its own scoped tokens. The agent itself never holds tokens; this file is what the runner consumes to know which sources to pull and where to drop the staged drafts.",
+  "$schema_comment": "Sample config for an Anthropic-cloud /schedule runner (or any cron-driven runner) calling vigil's v0.8 sync routines. The runner reads this file, picks routines whose 'cron' fires now, runs `vigil sync <name>`, and stages the resulting markdown files as a PR via its own scoped tokens. The agent itself never holds tokens; this file is what the runner consumes to know which sources to pull and where to drop the staged drafts.",
   "version": 1,
   "brain_root": "/srv/team-brain",
   "out_dir": "/srv/team-brain/pending-imports",
@@ -30,7 +30,7 @@
         "github_pr": {
           "repo": "your-org/team-brain",
           "branch_prefix": "sync/confluence-",
-          "marker": "<!-- teammate-agent: confluence_sync -->"
+          "marker": "<!-- vigil-agent: confluence_sync -->"
         }
       }
     },
