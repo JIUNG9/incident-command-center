@@ -1,4 +1,4 @@
-# teammate config — Ollama hosted inside a corporate VPN.
+# vigil config — Ollama hosted inside a corporate VPN.
 #
 # Use this when the developer machine cannot reach `localhost:11434` (no local
 # Ollama install allowed) but the team runs a shared Ollama behind the VPN. If

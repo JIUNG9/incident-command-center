@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "teammate — DevSecOps Brain",
+  title: "vigil — DevSecOps Brain",
   description: "Query your team's brain. Index past incidents. Run war-rooms.",
 };
 
@@ -16,7 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div className="flex items-center gap-8">
               <div className="flex items-center gap-2 font-semibold">
                 <span className="text-2xl">🧠</span>
-                <span>teammate</span>
+                <span>vigil</span>
               </div>
               <nav className="flex items-center gap-1 text-sm">
                 <Link href="/"        className="px-3 py-1.5 rounded-md hover:bg-zinc-100">Chat</Link>

@@ -1,5 +1,5 @@
 -- =============================================================================
--- teammate v3 — war-room state schema
+-- vigil v3 — war-room state schema
 -- =============================================================================
 -- Apply to Aurora Postgres OR in-cluster Postgres (your choice; Aurora preferred).
 -- The chat-api + war-api services connect via POSTGRES_DSN env var.

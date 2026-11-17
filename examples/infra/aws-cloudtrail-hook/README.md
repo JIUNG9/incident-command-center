@@ -1,6 +1,6 @@
 # AWS CloudTrail → brain-invalidations hook
 
-This module ships the **event source** for teammate's v0.9 event-driven
+This module ships the **event source** for vigil's v0.9 event-driven
 invalidation layer. It catches CloudTrail mutations (VPC, IAM, RDS,
 security groups, …) and commits a structured `InvalidationEvent` JSON
 file to your team's `brain-invalidations` GitHub repo.
@@ -17,7 +17,7 @@ AWS API call
                     └─► (optional) posts a Slack notice
 ```
 
-Engineers running `teammate ask` then see a banner whenever their query
+Engineers running `vigil ask` then see a banner whenever their query
 retrieves a runbook that references a recently-mutated resource.
 
 ## What this ships
@@ -47,7 +47,7 @@ examples/infra/aws-cloudtrail-hook/
 
    ```bash
    aws ssm put-parameter \
-       --name /teammate/github_pat \
+       --name /vigil/github_pat \
        --type SecureString \
        --value "$YOUR_PAT" \
        --region us-east-1
@@ -63,14 +63,14 @@ examples/infra/aws-cloudtrail-hook/
 
 ```hcl
 # terraform/main.tf in your platform repo:
-module "teammate_cloudtrail_hook" {
-  source = "github.com/your-org/teammate//examples/infra/aws-cloudtrail-hook/terraform?ref=v0.9.0"
+module "vigil_cloudtrail_hook" {
+  source = "github.com/your-org/vigil//examples/infra/aws-cloudtrail-hook/terraform?ref=v0.9.0"
 
   aws_account_id            = "000000000000"
   github_invalidations_repo = "your-org/brain-invalidations"
 
   # Optional overrides:
-  github_pat_ssm_parameter_name = "/teammate/github_pat"
+  github_pat_ssm_parameter_name = "/vigil/github_pat"
   github_branch                 = "main"
   default_severity              = "medium"
 
@@ -87,7 +87,7 @@ module "teammate_cloudtrail_hook" {
 
   tags = {
     Owner   = "platform-team"
-    Service = "teammate-invalidations"
+    Service = "vigil-invalidations"
   }
 }
 ```
@@ -117,10 +117,10 @@ gh api -X GET /repos/your-org/brain-invalidations/contents/invalidations \
     | jq '.[].name'
 
 # 3. From an engineer laptop:
-teammate impact list --since 1h
+vigil impact list --since 1h
 ```
 
-If you don't see the commit, `aws logs tail /aws/lambda/teammate-cloudtrail-hook
+If you don't see the commit, `aws logs tail /aws/lambda/vigil-cloudtrail-hook
 --follow` is the first place to look.
 
 ## Operational notes
@@ -142,7 +142,7 @@ If you don't see the commit, `aws logs tail /aws/lambda/teammate-cloudtrail-hook
   a per-spoke-account rule that forwards matching events to a central
   bus, then deploy this module once in the central account.
 - **Severity tuning** — start with the defaults. After a week of real
-  events, look at `teammate impact list --since 7d` and re-tune the
+  events, look at `vigil impact list --since 7d` and re-tune the
   `severity_map` so HIGH only fires on changes you'd want a banner for.
 
 ## Why this lives in `examples/`
@@ -150,7 +150,7 @@ If you don't see the commit, `aws logs tail /aws/lambda/teammate-cloudtrail-hook
 The OSS repo ships the schema, the handler, and the Terraform module —
 but every team's CloudTrail trail, account topology, IAM constraints,
 and severity preferences differ. We don't want to be in the business of
-maintaining a one-size-fits-all `terraform-aws-teammate` module. Fork
+maintaining a one-size-fits-all `terraform-aws-vigil` module. Fork
 this directory into your platform repo, tune to taste, version-pin via
 git ref. You will probably want to:
 

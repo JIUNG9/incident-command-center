@@ -2,10 +2,10 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: ollama-pull-models
-  namespace: teammate
+  namespace: vigil
   labels:
     app.kubernetes.io/name: ollama
-    app.kubernetes.io/managed-by: teammate-phase-b
+    app.kubernetes.io/managed-by: vigil-phase-b
   annotations:
     # Re-run on every ArgoCD sync. Pulls are idempotent — `ollama pull`
     # is a no-op when the model is already on disk.
@@ -18,7 +18,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: ollama
-        app.kubernetes.io/managed-by: teammate-phase-b
+        app.kubernetes.io/managed-by: vigil-phase-b
     spec:
       serviceAccountName: ollama
       restartPolicy: OnFailure
@@ -32,7 +32,7 @@ spec:
               set -eu
               echo "Waiting for Ollama service to come up..."
               for i in $(seq 1 60); do
-                if curl -fsS "http://ollama.teammate.svc.cluster.local:11434/" > /dev/null 2>&1; then
+                if curl -fsS "http://ollama.vigil.svc.cluster.local:11434/" > /dev/null 2>&1; then
                   echo "Ollama is reachable."
                   break
                 fi
@@ -41,7 +41,7 @@ spec:
               for model in llama3.2:3b nomic-embed-text; do
                 echo "Pulling ${model}..."
                 curl -fsS -X POST \
-                  "http://ollama.teammate.svc.cluster.local:11434/api/pull" \
+                  "http://ollama.vigil.svc.cluster.local:11434/api/pull" \
                   -d "{\"name\":\"${model}\"}" \
                   -H "Content-Type: application/json" \
                   > /dev/null

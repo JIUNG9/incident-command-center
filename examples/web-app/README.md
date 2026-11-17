@@ -1,9 +1,9 @@
-# teammate-chat-web — Standalone web UI
+# vigil-chat-web — Standalone web UI
 
 Next.js 14 (App Router, RSC, TypeScript, Tailwind). Talks to:
 
-- `teammate-chat-api` for `/api/chat/*` (chat, search, feed, index-status, reindex)
-- `teammate-war-api` for `/api/war/*` (incidents, SSE, slash commands)
+- `vigil-chat-api` for `/api/chat/*` (chat, search, feed, index-status, reindex)
+- `vigil-war-api` for `/api/war/*` (incidents, SSE, slash commands)
 
 ## Local dev
 
@@ -11,8 +11,8 @@ Next.js 14 (App Router, RSC, TypeScript, Tailwind). Talks to:
 cd examples/web-app
 npm install
 # Point at the cluster (or port-forward both services):
-TEAMMATE_CHAT_API_URL=http://localhost:8000 \
-TEAMMATE_WAR_API_URL=http://localhost:8001 \
+VIGIL_CHAT_API_URL=http://localhost:8000 \
+VIGIL_WAR_API_URL=http://localhost:8001 \
   npm run dev
 # Open http://localhost:3000
 ```
@@ -20,8 +20,8 @@ TEAMMATE_WAR_API_URL=http://localhost:8001 \
 ## Build + deploy
 
 ```bash
-docker build -t your-registry/teammate-chat-web:latest .
-docker push your-registry/teammate-chat-web:latest
+docker build -t your-registry/vigil-chat-web:latest .
+docker push your-registry/vigil-chat-web:latest
 ```
 
 Apply the k8s manifest in `examples/k8s/chat-web/deployment.yaml` (referenced by gitops).

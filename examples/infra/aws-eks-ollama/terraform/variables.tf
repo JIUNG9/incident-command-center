@@ -16,7 +16,7 @@ variable "cluster_name" {
 variable "namespace" {
   description = "Kubernetes namespace for the Ollama workload. Created by the manifest, not by Terraform."
   type        = string
-  default     = "teammate"
+  default     = "vigil"
 }
 
 variable "ollama_image_tag" {

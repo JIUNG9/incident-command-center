@@ -1,13 +1,13 @@
 # =============================================================================
-# Qdrant — k8s-native vector DB for teammate v1
+# Qdrant — k8s-native vector DB for vigil v1
 # =============================================================================
 # Single replica + PVC. Single-writer enforced at the indexer layer
-# (teammate-indexer Deployment is replicas=1, Recreate strategy).
+# (vigil-indexer Deployment is replicas=1, Recreate strategy).
 # Concurrent reads from chat-api + agent routines are lock-free (MVCC).
 #
 # Deploy via Helm:
 #   helm repo add qdrant https://qdrant.to/helm
-#   helm upgrade --install qdrant qdrant/qdrant -n teammate-agent \
+#   helm upgrade --install qdrant qdrant/qdrant -n vigil-agent \
 #     -f qdrant-values.yaml
 #
 # Or use this raw manifest if not using Helm.
@@ -16,7 +16,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: qdrant-storage
-  namespace: teammate-agent
+  namespace: vigil-agent
 spec:
   accessModes: ["ReadWriteOnce"]
   resources:
@@ -28,7 +28,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: qdrant
-  namespace: teammate-agent
+  namespace: vigil-agent
 spec:
   serviceName: qdrant
   replicas: 1
@@ -70,7 +70,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: qdrant
-  namespace: teammate-agent
+  namespace: vigil-agent
 spec:
   selector: {app: qdrant}
   ports:
