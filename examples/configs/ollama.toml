@@ -1,6 +1,6 @@
-# teammate config — local Ollama on the developer's laptop.
-# Drop this at `<repo>/.teammate/config.toml` (per-repo) or
-# `~/.teammate/config.toml` (per-user).
+# vigil config — local Ollama on the developer's laptop.
+# Drop this at `<repo>/.vigil/config.toml` (per-repo) or
+# `~/.vigil/config.toml` (per-user).
 
 [llm]
 provider = "ollama"

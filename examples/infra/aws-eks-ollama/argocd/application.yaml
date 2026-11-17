@@ -5,11 +5,11 @@ metadata:
   namespace: argocd
   labels:
     app.kubernetes.io/name: ollama
-    app.kubernetes.io/managed-by: teammate-phase-b
+    app.kubernetes.io/managed-by: vigil-phase-b
   annotations:
     # Sync wave 0: this app installs into a fresh namespace; nothing
     # else in the platform sync graph depends on it. Ollama itself
-    # tolerates being absent — every consumer (teammate, agents) will
+    # tolerates being absent — every consumer (vigil, agents) will
     # fail closed (keyword-only retrieval) until Ollama is back.
     argocd.argoproj.io/sync-wave: "0"
 spec:
@@ -25,7 +25,7 @@ spec:
       recurse: false
   destination:
     server: https://kubernetes.default.svc
-    namespace: teammate
+    namespace: vigil
   syncPolicy:
     # Manual sync is intentional. The Phase B doc explains why:
     # workload health (Ollama OOM under sudden traffic) is exactly

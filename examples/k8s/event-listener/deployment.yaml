@@ -1,44 +1,44 @@
 # =============================================================================
-# Deployment: teammate-event-listener — real-time event bridge
+# Deployment: vigil-event-listener — real-time event bridge
 # =============================================================================
 # Maintains a live Slack Socket Mode WebSocket. On matching Slack message,
-# creates a K8s Job for the appropriate teammate routine.
+# creates a K8s Job for the appropriate vigil routine.
 # Also polls Jira/Confluence on a configurable interval.
 #
 # Replicas=1 (single coordinator). strategy=Recreate avoids duplicate sockets.
-# Liveness probe: checks /tmp/teammate-heartbeat age < 90s.
+# Liveness probe: checks /tmp/vigil-heartbeat age < 90s.
 # Fail-fast: exits non-zero when socket cannot reconnect → pod restarts.
 #
 # Before deploying:
-#   1. Create a Kubernetes Secret named `teammate-credentials` with keys:
+#   1. Create a Kubernetes Secret named `vigil-credentials` with keys:
 #        slack-app-token   (xapp-...)
 #        slack-bot-token   (xoxb-...)
 #        github-pat        (repo read access)
 #        anthropic-api-key
 #        atlassian-token   (optional, enables Jira/Confluence polling)
-#   2. Update TEAMMATE_SLACK_CHANNELS to your channel name(s).
+#   2. Update VIGIL_SLACK_CHANNELS to your channel name(s).
 #   3. Replace the image with your built image (see Dockerfile at repo root).
 # =============================================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: teammate-event-listener
-  namespace: teammate-agent
+  name: vigil-event-listener
+  namespace: vigil-agent
   labels:
-    app: teammate-event-listener
+    app: vigil-event-listener
 spec:
   replicas: 1
   strategy:
     type: Recreate   # only 1 socket connection at a time
   selector:
     matchLabels:
-      app: teammate-event-listener
+      app: vigil-event-listener
   template:
     metadata:
       labels:
-        app: teammate-event-listener
+        app: vigil-event-listener
     spec:
-      serviceAccountName: teammate-agent   # needs get/list/create on Jobs + CronJobs
+      serviceAccountName: vigil-agent   # needs get/list/create on Jobs + CronJobs
       initContainers:
         - name: clone-brain
           image: alpine/git:2.43.0
@@ -48,23 +48,23 @@ spec:
               set -eu
               git clone --depth 1 --branch "${BRAIN_REF}" \
                 "https://x-access-token:${GITHUB_PAT}@github.com/${BRAIN_REPO}.git" \
-                /etc/teammate/brain
+                /etc/vigil/brain
           env:
             - name: BRAIN_REF
               valueFrom:
                 configMapKeyRef:
-                  name: teammate-config
+                  name: vigil-config
                   key: brain_ref         # single key to pin all agents to a git ref
             - name: BRAIN_REPO
               value: "your-org/your-brain-repo"   # replace
             - name: GITHUB_PAT
               valueFrom:
                 secretKeyRef:
-                  name: teammate-credentials
+                  name: vigil-credentials
                   key: github-pat
           volumeMounts:
             - name: brain
-              mountPath: /etc/teammate/brain
+              mountPath: /etc/vigil/brain
         - name: check-ollama
           image: curlimages/curl:8.6.0
           command: ["/bin/sh", "-c"]
@@ -82,24 +82,24 @@ spec:
             - name: OLLAMA_ENDPOINT
               value: http://ollama.ollama.svc.cluster.local:11434
       containers:
-        - name: teammate-listener
-          image: your-registry/teammate:latest   # replace with your image
+        - name: vigil-listener
+          image: your-registry/vigil:latest   # replace with your image
           imagePullPolicy: Always
           command:
-            - teammate
+            - vigil
             - agent
             - listen
             - "--poll-interval"
             - "60"
             - "--fail-on-disconnect"
           env:
-            - name: TEAMMATE_BRAIN_ROOT
-              value: /etc/teammate/brain
-            - name: TEAMMATE_LLM_HOST
+            - name: VIGIL_BRAIN_ROOT
+              value: /etc/vigil/brain
+            - name: VIGIL_LLM_HOST
               value: http://ollama.ollama.svc.cluster.local:11434
-            - name: TEAMMATE_EMBEDDING_HOST
+            - name: VIGIL_EMBEDDING_HOST
               value: http://ollama.ollama.svc.cluster.local:11434
-            - name: TEAMMATE_SLACK_CHANNELS
+            - name: VIGIL_SLACK_CHANNELS
               value: "ops-alerts"   # replace with your channel
             - name: JIRA_BASE_URL
               value: "https://your-org.atlassian.net"   # replace or remove
@@ -110,27 +110,27 @@ spec:
             - name: GITHUB_PAT
               valueFrom:
                 secretKeyRef:
-                  name: teammate-credentials
+                  name: vigil-credentials
                   key: github-pat
             - name: SLACK_APP_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: teammate-credentials
+                  name: vigil-credentials
                   key: slack-app-token
             - name: SLACK_BOT_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: teammate-credentials
+                  name: vigil-credentials
                   key: slack-bot-token
             - name: ANTHROPIC_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: teammate-credentials
+                  name: vigil-credentials
                   key: anthropic-api-key
             - name: ATLASSIAN_API_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: teammate-credentials
+                  name: vigil-credentials
                   key: atlassian-token
                   optional: true
           livenessProbe:
@@ -139,21 +139,21 @@ spec:
                 - /bin/sh
                 - -c
                 - |
-                  test -f /tmp/teammate-heartbeat && \
-                  [ $(( $(date +%s) - $(stat -c %Y /tmp/teammate-heartbeat) )) -lt 90 ]
+                  test -f /tmp/vigil-heartbeat && \
+                  [ $(( $(date +%s) - $(stat -c %Y /tmp/vigil-heartbeat) )) -lt 90 ]
             initialDelaySeconds: 60
             periodSeconds: 30
             failureThreshold: 2
           readinessProbe:
             exec:
-              command: ["/bin/sh", "-c", "test -f /tmp/teammate-ready"]
+              command: ["/bin/sh", "-c", "test -f /tmp/vigil-ready"]
             initialDelaySeconds: 30
             periodSeconds: 10
           volumeMounts:
             - name: brain
-              mountPath: /etc/teammate/brain
+              mountPath: /etc/vigil/brain
             - name: brain-cache
-              mountPath: /var/cache/teammate
+              mountPath: /var/cache/vigil
           resources:
             requests:
               cpu: 100m

@@ -6,7 +6,7 @@ variable "aws_account_id" {
 variable "lambda_function_name" {
   description = "Name for the Lambda function."
   type        = string
-  default     = "teammate-cloudtrail-hook"
+  default     = "vigil-cloudtrail-hook"
 }
 
 variable "github_invalidations_repo" {
@@ -23,7 +23,7 @@ variable "github_branch" {
 variable "github_pat_ssm_parameter_name" {
   description = "SSM Parameter Store name holding the GitHub PAT (SecureString)."
   type        = string
-  default     = "/teammate/github_pat"
+  default     = "/vigil/github_pat"
 }
 
 variable "slack_webhook_url" {

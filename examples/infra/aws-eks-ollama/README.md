@@ -9,8 +9,8 @@ deployment is for teams who'd rather centralize the inference plane.
 > **TL;DR for the impatient:** copy this directory into your platform
 > repo, point your `kubernetes` provider at your EKS cluster, run
 > `terraform apply` here, then `kubectl apply -f ../k8s/`. Engineers
-> point teammate at `http://ollama.teammate.svc.cluster.local:11434`
-> in their `.teammate/config.toml`.
+> point vigil at `http://ollama.vigil.svc.cluster.local:11434`
+> in their `.vigil/config.toml`.
 
 ## What this ships
 
@@ -87,9 +87,9 @@ you `kubectl apply` the workload manifests.
 cd terraform
 terraform init
 terraform plan -var "cluster_name=acme-corp-platform" \
-               -var "namespace=teammate"
+               -var "namespace=vigil"
 terraform apply -var "cluster_name=acme-corp-platform" \
-                -var "namespace=teammate"
+                -var "namespace=vigil"
 ```
 
 You should see three Kubernetes resources created:
@@ -103,22 +103,22 @@ kubernetes_service_account.ollama: Creation complete
 Now apply the workload:
 
 ```bash
-kubectl apply -n teammate -f ../k8s/ollama-deployment.yaml
-kubectl apply -n teammate -f ../k8s/ollama-service.yaml
-kubectl apply -n teammate -f ../k8s/ollama-init-job.yaml
+kubectl apply -n vigil -f ../k8s/ollama-deployment.yaml
+kubectl apply -n vigil -f ../k8s/ollama-service.yaml
+kubectl apply -n vigil -f ../k8s/ollama-init-job.yaml
 ```
 
 Wait for the Pod to come up:
 
 ```bash
-kubectl rollout status -n teammate deployment/ollama --timeout=10m
+kubectl rollout status -n vigil deployment/ollama --timeout=10m
 ```
 
 The init Job runs `ollama pull llama3.2:3b` and `ollama pull
 nomic-embed-text` in the background. You can watch:
 
 ```bash
-kubectl logs -n teammate -l job-name=ollama-pull-models -f
+kubectl logs -n vigil -l job-name=ollama-pull-models -f
 ```
 
 First pull is slow (~5 minutes for the 3B model on a typical EKS
@@ -161,52 +161,52 @@ Once the Pod is `Ready`:
 
 ```bash
 # 1. From inside the cluster (e.g. a debug Pod):
-kubectl run -n teammate --rm -it --image=curlimages/curl:8.10.1 \
+kubectl run -n vigil --rm -it --image=curlimages/curl:8.10.1 \
   ollama-probe -- curl -fsS http://ollama:11434/ \
   && echo "OK"
 
 # 2. Run a smoke generation:
-kubectl exec -n teammate deploy/ollama -- \
+kubectl exec -n vigil deploy/ollama -- \
   ollama list
 
 # 3. From your laptop (with port-forward):
-kubectl port-forward -n teammate svc/ollama 11434:11434 &
+kubectl port-forward -n vigil svc/ollama 11434:11434 &
 curl -fsS http://localhost:11434/api/tags | python -m json.tool
 ```
 
 You should see `llama3.2:3b` and `nomic-embed-text` in the model list.
 
-## Point teammate at the EKS endpoint
+## Point vigil at the EKS endpoint
 
 Engineers who want to use the shared instance instead of running
 Ollama locally:
 
 ```toml
-# .teammate/config.toml — per-repo or in ~/.teammate/config.toml
+# .vigil/config.toml — per-repo or in ~/.vigil/config.toml
 
 [llm]
 provider = "ollama"
 model    = "llama3.2:3b"
-host     = "http://ollama.teammate.svc.cluster.local:11434"
+host     = "http://ollama.vigil.svc.cluster.local:11434"
 
 [embedding]
 provider = "ollama"
 model    = "nomic-embed-text"
-host     = "http://ollama.teammate.svc.cluster.local:11434"
+host     = "http://ollama.vigil.svc.cluster.local:11434"
 ```
 
 That host is the in-cluster DNS name. For laptop-to-cluster access,
 two clean options:
 
 1. **Port-forward (developer laptops):**
-   `kubectl port-forward -n teammate svc/ollama 11434:11434` — set
+   `kubectl port-forward -n vigil svc/ollama 11434:11434` — set
    `host = "http://localhost:11434"` in your local config.
 2. **VPN / private LB:** if your cluster lives on a VPC the laptops
    can reach, swap the Service to a private NLB and use that DNS
    name. ClusterIP-only is the safer OSS default; promote to private
    LB only after a security review.
 
-`teammate doctor` will pick up the new endpoint and probe it for
+`vigil doctor` will pick up the new endpoint and probe it for
 reachability + model availability.
 
 ## Cost notes
@@ -230,12 +230,12 @@ team, CPU is fine.
 
 | Task | Command |
 | --- | --- |
-| Tail Ollama logs | `kubectl logs -n teammate deploy/ollama -f` |
-| List installed models | `kubectl exec -n teammate deploy/ollama -- ollama list` |
-| Pull a new model | `kubectl exec -n teammate deploy/ollama -- ollama pull <name>` |
-| Restart (preserves PVC) | `kubectl rollout restart -n teammate deploy/ollama` |
-| Resize the PVC | edit `pvc_size` in tfvars, `terraform apply`, `kubectl get pvc -n teammate` |
-| Delete and reinstall | `kubectl delete -n teammate -f ../k8s/`; the PVC remains |
+| Tail Ollama logs | `kubectl logs -n vigil deploy/ollama -f` |
+| List installed models | `kubectl exec -n vigil deploy/ollama -- ollama list` |
+| Pull a new model | `kubectl exec -n vigil deploy/ollama -- ollama pull <name>` |
+| Restart (preserves PVC) | `kubectl rollout restart -n vigil deploy/ollama` |
+| Resize the PVC | edit `pvc_size` in tfvars, `terraform apply`, `kubectl get pvc -n vigil` |
+| Delete and reinstall | `kubectl delete -n vigil -f ../k8s/`; the PVC remains |
 
 ## Failure modes worth knowing
 
@@ -244,7 +244,7 @@ team, CPU is fine.
   `memory_limit` to a value above your peak inference RSS.
 - **PVC stuck in Pending.** Usually means the storage class doesn't
   exist or the cluster has no node in the AZ where the PVC is
-  binding. Fix: `kubectl describe pvc -n teammate ollama-models` and
+  binding. Fix: `kubectl describe pvc -n vigil ollama-models` and
   follow the events.
 - **`ollama pull` 503s.** registry.ollama.ai had an outage. Re-run
   the init Job — it's idempotent.

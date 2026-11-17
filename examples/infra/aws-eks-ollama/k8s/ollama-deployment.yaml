@@ -2,10 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ollama
-  namespace: teammate
+  namespace: vigil
   labels:
     app.kubernetes.io/name: ollama
-    app.kubernetes.io/managed-by: teammate-phase-b
+    app.kubernetes.io/managed-by: vigil-phase-b
 spec:
   replicas: 1
   selector:
@@ -17,7 +17,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: ollama
-        app.kubernetes.io/managed-by: teammate-phase-b
+        app.kubernetes.io/managed-by: vigil-phase-b
     spec:
       serviceAccountName: ollama
       securityContext:
@@ -69,10 +69,10 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: ollama
-  namespace: teammate
+  namespace: vigil
   labels:
     app.kubernetes.io/name: ollama
-    app.kubernetes.io/managed-by: teammate-phase-b
+    app.kubernetes.io/managed-by: vigil-phase-b
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

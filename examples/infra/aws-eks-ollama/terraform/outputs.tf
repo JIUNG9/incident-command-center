@@ -4,7 +4,7 @@ output "namespace" {
 }
 
 output "service_dns_name" {
-  description = "In-cluster DNS name engineers should point teammate at. Append `:11434`."
+  description = "In-cluster DNS name engineers should point vigil at. Append `:11434`."
   value       = "ollama.${kubernetes_namespace.ollama.metadata[0].name}.svc.cluster.local"
 }
 

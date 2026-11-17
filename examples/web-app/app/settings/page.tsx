@@ -6,8 +6,8 @@ export default function SettingsPage() {
   const [floor,  setFloor]    = useState(0.5);
 
   function save() {
-    localStorage.setItem("teammate.source_weights", JSON.stringify(weights));
-    localStorage.setItem("teammate.score_floor",    String(floor));
+    localStorage.setItem("vigil.source_weights", JSON.stringify(weights));
+    localStorage.setItem("vigil.score_floor",    String(floor));
     alert("Saved.");
   }
 
