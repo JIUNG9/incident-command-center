@@ -35,6 +35,9 @@ def _isolate_env(monkeypatch):
         "TEAMMATE_BRAIN_ROOT",
         "TEAMMATE_FORCE_INIT",
         "TEAMMATE_OVERRIDE",
+        "VIGIL_OVERRIDE",
+        "VIGIL_PROTECTED_BRANCHES",
+        "TEAMMATE_PROTECTED_BRANCHES",
         "GITHUB_TOKEN",
     ):
         monkeypatch.delenv(var, raising=False)

@@ -51,6 +51,12 @@ def test_pre_push_allows_feature_branch():
 
 def test_pre_push_override_allows_main():
     stdin = b"refs/heads/feature abc123 refs/heads/main def456\n"
+    p = _run_pre_push(stdin, env={"VIGIL_OVERRIDE": "1"})
+    assert p.returncode == 0
+
+
+def test_pre_push_legacy_override_still_allows_main():
+    stdin = b"refs/heads/feature abc123 refs/heads/main def456\n"
     p = _run_pre_push(stdin, env={"TEAMMATE_OVERRIDE": "1"})
     assert p.returncode == 0
 
@@ -87,6 +93,12 @@ def test_pre_tool_use_blocks_drop_table():
 
 
 def test_pre_tool_use_override_allows_dangerous():
+    payload = b'{"tool_name": "Bash", "command": "git push origin main"}'
+    p = _run_pre_tool_use(payload, env={"VIGIL_OVERRIDE": "1"})
+    assert p.returncode == 0
+
+
+def test_pre_tool_use_legacy_override_still_allows_dangerous():
     payload = b'{"tool_name": "Bash", "command": "git push origin main"}'
     p = _run_pre_tool_use(payload, env={"TEAMMATE_OVERRIDE": "1"})
     assert p.returncode == 0

@@ -1,31 +1,31 @@
 ---
-name: init-teammate
-description: Set up teammate on this laptop in an already-cloned team-brain repo. Detects Ollama, builds the local sqlite-vec index of every markdown file, optionally registers gbrain. For team leads creating a NEW team-brain repo, use `teammate scaffold` first instead.
+name: init-vigil
+description: Set up vigil on this laptop in an already-cloned team-brain repo. Detects Ollama, builds the local sqlite-vec index of every markdown file, optionally registers gbrain. For team leads creating a NEW team-brain repo, use `vigil scaffold` first instead.
 ---
 
-# /init-teammate
+# /init-vigil
 
 One-command per-laptop setup for an engineer who just cloned the team-brain repo.
 
 ## When to invoke
 
 - A new engineer just cloned the team's brain repo and wants to start using it.
-- The user mentions "set up teammate", "first run on this laptop", "I just joined".
+- The user mentions "set up vigil", "first run on this laptop", "I just joined".
 
 ## Two distinct flows
 
-- **Team lead setting up the brain for the first time:** `teammate scaffold <dir>`.
+- **Team lead setting up the brain for the first time:** `vigil scaffold <dir>`.
   Creates a fresh team-brain repo from the bundled template. Run once per
   organization. Outputs a skeleton ready to commit + push to a private remote.
 
-- **Engineer joining an existing team brain (this skill):** `teammate init`.
+- **Engineer joining an existing team brain (this skill):** `vigil init`.
   Run inside an already-cloned brain repo. Detects + indexes + sets up local
   query path. Run once per laptop.
 
 ## Behavior
 
 1. **Brain detection.** Confirms `CLAUDE.md` exists at the cwd (i.e., this is
-   a team-brain repo). If not, refuses with the hint to run `teammate scaffold`
+   a team-brain repo). If not, refuses with the hint to run `vigil scaffold`
    first.
 
 2. **Ollama detection.** Checks `localhost:11434`. If running, lists models
@@ -36,7 +36,7 @@ One-command per-laptop setup for an engineer who just cloned the team-brain repo
    register-as-source pass with `--register-gbrain`.
 
 4. **Local index build.** Runs the indexer over every markdown file in the brain
-   (CLAUDE.md, .claude/, docs/, knowledge/). Writes to `.teammate-cache/vault.sqlite`
+   (CLAUDE.md, .claude/, docs/, knowledge/). Writes to `.vigil-cache/vault.sqlite`
    (sqlite-vec). Re-uses Ollama embeddings if available; falls back to keyword
    scoring if not.
 
@@ -44,9 +44,9 @@ One-command per-laptop setup for an engineer who just cloned the team-brain repo
 
 ```bash
 cd /path/to/team-brain
-teammate init
+vigil init
 # or, with gbrain registration:
-teammate init --register-gbrain
+vigil init --register-gbrain
 ```
 
 ## Output
@@ -54,7 +54,7 @@ teammate init --register-gbrain
 Per-step status table:
 
 ```
-teammate init —
+vigil init —
   ✓ brain: detected at /path/to/team-brain: 23 markdown files (1 CLAUDE.md, 5 skills, 3 rules, 9 docs, 5 knowledge)
   ✓ ollama: up. Required models present: llama3.2:3b, nomic-embed-text
   · gbrain: not on PATH; built-in mini-RAG will handle queries
@@ -64,7 +64,7 @@ teammate init —
 ## What blocks a successful init
 
 - No `CLAUDE.md` at the cwd. The user is in the wrong directory, OR they are
-  the team lead and need `teammate scaffold` first.
+  the team lead and need `vigil scaffold` first.
 
 ## What does NOT block
 

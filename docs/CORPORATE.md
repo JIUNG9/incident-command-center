@@ -40,8 +40,8 @@ host     = "https://ollama.internal.your-team.local:11434"
 Or via environment variables (override the file):
 
 ```bash
-export TEAMMATE_LLM_HOST="https://ollama.internal.your-team.local:11434"
-export TEAMMATE_EMBEDDING_HOST="https://ollama.internal.your-team.local:11434"
+export VIGIL_LLM_HOST="https://ollama.internal.your-team.local:11434"
+export VIGIL_EMBEDDING_HOST="https://ollama.internal.your-team.local:11434"
 # or, the common Ollama-native var (file `host` still wins if set):
 export OLLAMA_HOST="https://ollama.internal.your-team.local:11434"
 ```

@@ -23,14 +23,14 @@ Add the rules every engineer should follow. Keep them direct and actionable. Exa
 - We pin dependencies. Lockfiles must be committed.
 - We document architecture decisions in `knowledge/decisions/` as ADRs.
 
-## How we use teammate
+## How we use vigil
 
 This repo IS the team brain. Each engineer:
 
 1. Clones the repo locally.
-2. Runs `teammate init` (one time per laptop) — sets up Ollama, builds the local
+2. Runs `vigil init` (one time per laptop) — sets up Ollama, builds the local
    sqlite-vec index of every markdown file in this repo.
-3. Uses `teammate ask "<question>"` to query the brain locally with the team's
+3. Uses `vigil ask "<question>"` to query the brain locally with the team's
    own LLM. Answers cite the markdown files they came from.
 4. When a piece of tribal knowledge needs to land in the brain: write it as
    markdown, commit, push, PR. The CI workflow re-builds the canonical index

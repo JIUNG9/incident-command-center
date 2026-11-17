@@ -55,7 +55,7 @@ pip install 'vigil[listen]'
 # Set tokens (never commit these)
 export SLACK_APP_TOKEN="xapp-..."
 export SLACK_BOT_TOKEN="xoxb-..."
-export TEAMMATE_SLACK_CHANNELS="ops-alerts"   # channel to watch
+export VIGIL_SLACK_CHANNELS="ops-alerts"   # channel to watch
 
 # Optional: Jira/Confluence polling
 export ATLASSIAN_API_TOKEN="..."
@@ -156,8 +156,8 @@ API Gateway endpoint. This is out of scope for the default setup.
 |---|---|---|
 | `SLACK_APP_TOKEN` | yes | `xapp-...` App-Level Token (Socket Mode) |
 | `SLACK_BOT_TOKEN` | yes | `xoxb-...` Bot Token |
-| `TEAMMATE_SLACK_CHANNELS` | no | Comma-separated channel names. Empty = all channels. |
-| `TEAMMATE_NAMESPACE` | no | K8s namespace for Job creation (default: `vigil-agent`) |
+| `VIGIL_SLACK_CHANNELS` | no | Comma-separated channel names. Empty = all channels. |
+| `VIGIL_NAMESPACE` | no | K8s namespace for Job creation (default: `vigil-agent`) |
 | `ATLASSIAN_API_TOKEN` | no | Enables Jira/Confluence polling |
 | `ATLASSIAN_EMAIL` | no | Email for Atlassian Basic auth |
 | `JIRA_BASE_URL` | no | e.g. `https://your-org.atlassian.net` |

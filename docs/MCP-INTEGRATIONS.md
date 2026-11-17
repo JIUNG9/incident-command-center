@@ -7,7 +7,7 @@
 
 Most teams already have sources of truth that are not git: Confluence
 runbooks, Jira decisions, pinned Slack messages, AWS / Kubernetes
-documentation pages. Teammate's job is **not** to relocate those. The
+documentation pages. Vigil's job is **not** to relocate those. The
 team-brain repo is the *derived* canonical layer; the original sources
 keep being authoritative for their own domain.
 
@@ -174,7 +174,7 @@ plus the artifacts list. The summary includes per-source counts:
 The agent module has no idea what an Atlassian token looks like.
 That's the point. The CLI hands the runner whatever's in the config
 file, and a runner with MCP-aware fetchers swaps in a fetcher that
-routes through the user's existing Atlassian MCP server. **Teammate
+routes through the user's existing Atlassian MCP server. **Vigil
 ships no MCP servers of its own** — it consumes whatever the user
 already has configured.
 

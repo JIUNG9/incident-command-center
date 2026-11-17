@@ -33,7 +33,7 @@ without touching call sites.
 
 Precedence (highest first):
 
-1. Environment variables (`TEAMMATE_LLM_*` / `TEAMMATE_EMBEDDING_*`).
+1. Environment variables (`VIGIL_LLM_*` / `VIGIL_EMBEDDING_*`).
 2. Per-repo: `<brain_root>/.vigil/config.toml`.
 3. Per-user: `~/.vigil/config.toml`.
 4. Built-in defaults (Ollama on `localhost:11434`).
@@ -68,14 +68,14 @@ Per-section keys recognized in v0.3:
 
 | Var | Purpose |
 |-----|---------|
-| `TEAMMATE_LLM_PROVIDER` | Override the LLM provider name. |
-| `TEAMMATE_LLM_MODEL` | Override the LLM model. |
-| `TEAMMATE_LLM_HOST` (alias `_BASE_URL`) | Override the LLM endpoint. |
-| `TEAMMATE_LLM_API_KEY_ENV` | Env-var name to read the API key from. |
-| `TEAMMATE_EMBEDDING_PROVIDER` | Same, for the embedding side. |
-| `TEAMMATE_EMBEDDING_MODEL` | … |
-| `TEAMMATE_EMBEDDING_HOST` | … |
-| `TEAMMATE_EMBEDDING_API_KEY_ENV` | … |
+| `VIGIL_LLM_PROVIDER` | Override the LLM provider name. |
+| `VIGIL_LLM_MODEL` | Override the LLM model. |
+| `VIGIL_LLM_HOST` (alias `_BASE_URL`) | Override the LLM endpoint. |
+| `VIGIL_LLM_API_KEY_ENV` | Env-var name to read the API key from. |
+| `VIGIL_EMBEDDING_PROVIDER` | Same, for the embedding side. |
+| `VIGIL_EMBEDDING_MODEL` | … |
+| `VIGIL_EMBEDDING_HOST` | … |
+| `VIGIL_EMBEDDING_API_KEY_ENV` | … |
 
 Run `vigil config show` to see the effective config. Any `*api_key*`
 value (other than `_env` indirection) is redacted in the output.

@@ -3,8 +3,10 @@
 ## [Unreleased]
 
 ### Changed
-- Environment variables read by `src/` moved from `TEAMMATE_*` to `VIGIL_*` (`VIGIL_BRAIN_ROOT`, `VIGIL_LLM_*`, `VIGIL_EMBEDDING_*`, `VIGIL_SLACK_CHANNELS`, `VIGIL_NAMESPACE`, `VIGIL_TOP_K`, `VIGIL_SCORE_FLOOR`, `VIGIL_DIGEST_*`, `VIGIL_CHUNK_*`, `VIGIL_INDEXED_DIRS`, `VIGIL_INCIDENT_ID`, `VIGIL_WAR_API_URL`). The `TEAMMATE_*` names are still read as a deprecated fallback, emit a `DeprecationWarning`, and are removed in the next release. `VIGIL_*` wins when both are set. `vigil-client` now exports and writes `VIGIL_INCIDENT_ID` / `VIGIL_WAR_API_URL`; `leave` unsets both spellings. `TEAMMATE_OVERRIDE`, `TEAMMATE_FORCE_INIT` and `TEAMMATE_PROTECTED_BRANCHES` are read by the shell hooks and are unchanged here.
+- Environment variables read by `src/` moved from `TEAMMATE_*` to `VIGIL_*` (`VIGIL_BRAIN_ROOT`, `VIGIL_LLM_*`, `VIGIL_EMBEDDING_*`, `VIGIL_SLACK_CHANNELS`, `VIGIL_NAMESPACE`, `VIGIL_TOP_K`, `VIGIL_SCORE_FLOOR`, `VIGIL_DIGEST_*`, `VIGIL_CHUNK_*`, `VIGIL_INDEXED_DIRS`, `VIGIL_INCIDENT_ID`, `VIGIL_WAR_API_URL`). The `TEAMMATE_*` names are still read as a deprecated fallback, emit a `DeprecationWarning`, and are removed in the next release. `VIGIL_*` wins when both are set. `vigil-client` now exports and writes `VIGIL_INCIDENT_ID` / `VIGIL_WAR_API_URL`; `leave` unsets both spellings. The shell hooks read `VIGIL_OVERRIDE` and `VIGIL_PROTECTED_BRANCHES` first and fall back to `TEAMMATE_OVERRIDE` and `TEAMMATE_PROTECTED_BRANCHES` (no warning, bash). `TEAMMATE_FORCE_INIT` was never read by any code, so it is gone from the README.
 - Every production-metrics and cost table in `docs/ARCHITECTURE.md` and `docs/series-7/` now carries a label: measured figures are marked as self-reported from one internal deployment and not reproducible from this repo; cost figures are marked as estimates.
+
+- The shipped Claude Code plugin (`.claude-plugin/plugin.json`), skills, hooks, team-brain template and docs used the old `teammate` command and module names (`teammate init`, `python -m teammate.mcp_server`); they now say `vigil`. The skill folder `skills/init-teammate` is `skills/init-vigil`, and the template's `.teammate-naming.toml` is `.vigil-naming.toml`, the name `vigil` actually reads.
 
 ### Removed
 - The `teammate` back-compat import shim (`src/teammate/`) and its test. Nothing in the repo imported it.
