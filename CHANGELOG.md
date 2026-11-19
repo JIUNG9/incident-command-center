@@ -11,6 +11,7 @@
 - The config dataclass `TeammateConfig` is now `VigilConfig` (`vigil.config`, no alias). `docs/series-7/` keeps the old name on purpose: it is a dated write-up of the project as `teammate`.
 
 ### Removed
+- The last K-ISMS-P / KISA references. The compliance catalogs were deleted earlier; the `vigil ask` system prompt still told the model to treat Korean compliance terms as first-class and to cite control IDs, and the `vigil.rag` docstring still described a compliance vault. Both now describe the incident, runbook and postmortem brain. The empty `catalogs/` folder is gone.
 - The `teammate` back-compat import shim (`src/teammate/`) and its test. Nothing in the repo imported it.
   Use `vigil.providers` for `OllamaClient`-style imports. The `TEAMMATE_*` environment variables were
   unchanged in that release (see Changed above for the rename).
