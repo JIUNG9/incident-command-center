@@ -1,8 +1,7 @@
-"""Local LLM + RAG over the compliance vault.
+"""Local LLM + RAG over the team brain.
 
-The headline pillar. Without this, ``vigil`` is just a compliance scanner.
-With this, the new SRE on day 1 can ``vigil ask "what's our current K-ISMS-P
-posture and which controls are failing?"`` and get a grounded answer from a
+With this, the new SRE on day 1 can ``vigil ask "what broke last time the
+payments queue backed up?"`` and get a grounded answer from a
 local LLM running on their laptop, no cloud round-trip.
 
 Design choices:
