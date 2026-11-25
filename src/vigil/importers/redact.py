@@ -14,11 +14,13 @@ What this scrubs:
 - Atlassian API tokens (ATATT3xFfGF0... — long opaque string with that prefix)
 - Bearer tokens in HTTP headers, "Bearer <opaque>"
 - URLs with ``?token=`` or ``?key=`` query parameters
-- Email addresses NOT on the org's allowlist (configurable)
+- Anthropic (``sk-ant-api03-``) and OpenAI (``sk-``) API keys
 - IP addresses in the 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 RFC1918
-  ranges — public IPs are kept because they're typically already public
+  ranges, only when called with ``scrub_private_ips=True`` (off by default);
+  public IPs are always kept because they're typically already public
 
 What this does NOT scrub:
+- Email addresses (no email pattern exists; pass one in ``custom_patterns``)
 - Free-text mention of a service / runbook / colleague name — that's the
   point of having the brain. Add specific terms to ``CUSTOM_PATTERNS`` if
   you need to redact those too.
